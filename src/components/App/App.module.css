@@ -1,16 +1,17 @@
 .container {
-  min-height: 100vh;
-    font-family: Arial, sans-serif;
-    text-align: center;
     display: flex;
     flex-direction: column;
     justify-content: center;
+    text-align: center;
+    padding: 24px;
   }
   
   .dropArea {
+    box-sizing: border-box;
+    width: 100%;
     border: 2px dashed #ccc;
     padding: 20px;
-    width: 300px;
+    max-width: 300px;
     margin: 20px auto;
     border-radius: 8px;
   }
@@ -21,12 +22,14 @@
   }
   
   .progress {
-    width: 300px;
-    margin: 20px auto;
+    width: 100%;
+    max-width: 300px;
+    margin: 0 auto 20px;
     background-color: #f3f3f3;
     border-radius: 8px;
     overflow: hidden;
     height: 20px;
+    
   }
   
   .progressBar {
