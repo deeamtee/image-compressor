@@ -1,0 +1,1 @@
+# Reduce Image Size Extension
