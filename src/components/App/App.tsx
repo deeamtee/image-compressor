@@ -4,6 +4,10 @@ import cn from 'clsx';
 import { optimize } from 'svgo';
 import imageCompression from 'browser-image-compression';
 
+// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+// @ts-ignore
+const UPNG = window.UPNG;
+
 export const App: React.FC = () => {
   const [dragging, setDragging] = useState(false);
   const [compressedFile, setCompressedFile] = useState<Blob | null>(null);
@@ -43,7 +47,7 @@ export const App: React.FC = () => {
         setTimeout(() => setProgress(100), 300);
       };
       reader.readAsText(file);
-    }else if (['image/jpeg', 'image/png'].includes(file.type)) {
+    }else if (['image/jpeg'].includes(file.type)) {
       // TODO: Приблизиться к tinypng. Сейчас PNG 530 Кб => 418 Кб, tinypng 155 Кб
       const options = {
         // maxSizeMB: 1,  // Устанавливаем целевой размер файла в мегабайтах
@@ -59,9 +63,34 @@ export const App: React.FC = () => {
       } catch {
         setErrorMessage('Image compression error');
       }
-    } else {
+    } else if (file && file.type === 'image/png') {
+      compressPng(file);
+    }else {
       setErrorMessage('Only JPEG, PNG and SVG images are supported');
     }
+  };
+
+  const compressPng = async (file: File) => {
+    const reader = new FileReader();
+    reader.onload = function(event) {
+      const arrayBuffer = event.target?.result as ArrayBuffer;
+      const pngData = new Uint8Array(arrayBuffer);
+
+      // Декодируем PNG в массив данных
+      const img = UPNG.decode(pngData);
+      
+      // Сжимаем изображение с желаемым количеством цветов (например, 256 цветов)
+      const compressedData = UPNG.encode([img.data.buffer], img.width, img.height, 256);
+
+      // Создаем blob из сжатого изображения
+      const blob = new Blob([compressedData], { type: 'image/png' });
+      const link = document.createElement('a');
+      link.href = URL.createObjectURL(blob);
+      link.download = fileRef.current.name || 'compressed.png';
+      link.click();
+    };
+
+    reader.readAsArrayBuffer(file);
   };
 
   const downloadCompressedSvg = () => {

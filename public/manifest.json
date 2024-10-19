@@ -1,23 +1,15 @@
 {
     "manifest_version": 3,
-    "name": "React Chrome Extension",
+    "name": "Reduce Image Size",
     "version": "1.0",
     "description": "Chrome Extension built with React and TypeScript",
     "action": {
-      "default_popup": "index.html",
-      "icons": {
-        "16": "/coffee.svg",
-        "48": "/coffee.svg",
-        "128": "/coffee.svg"
-      }
+      "default_popup": "index.html"
     },
-    "permissions": ["storage"],
-    "content_scripts": [
-      {
-        "matches": ["<all_urls>"],
-        "js": ["assets/content.js"],
-        "css": ["assets/content.css"]
-      }
-    ]
+    "icons": {
+      "32": "coffee32.svg"
+    },
+    "permissions": ["scripting"],
+    "host_permissions": ["<all_urls>"]
   }
   
