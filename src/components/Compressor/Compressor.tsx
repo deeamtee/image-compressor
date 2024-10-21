@@ -1,9 +1,10 @@
 import React, { useState } from 'react';
-import styles from './App.module.css';
+import styles from './Compressor.module.css';
 import cn from 'clsx';
-import { compressJpeg, compressPng, compressSvg } from './App.helpers';
+import { compressJpeg, compressPng, compressSvg } from './Compressor.helpers';
+import { UploadedFile } from '../UploadedFile';
 
-export const App: React.FC = () => {
+export const Compressor: React.FC = () => {
   const [dragging, setDragging] = useState(false);
   const [compressedFile, setCompressedFile] = useState<Blob | null>(null);
   const [progress, setProgress] = useState<number>(0);
@@ -24,10 +25,13 @@ export const App: React.FC = () => {
     setDragging(false);
     setProgress(0);
     setErrorMessage(null);
+
     const file = e.dataTransfer.files[0];
 
     if (!file) return;
+    console.log(e.dataTransfer.files);
 
+    console.log(e.dataTransfer.files);
     fileRef.current = { name: file.name };
     try {
       let compressed: Blob | null = null;
@@ -47,11 +51,11 @@ export const App: React.FC = () => {
         setCompressedFile(compressed);
         setProgress(100);
       }
-  } catch {
-    setErrorMessage('Image compression error');
-  }
+    } catch {
+      setErrorMessage('Image compression error');
+    }
   };
-  
+
   const downloadCompressed = () => {
     if (compressedFile) {
       const blob = new Blob([compressedFile], { type: compressedFile.type });
@@ -86,6 +90,14 @@ export const App: React.FC = () => {
           <button onClick={downloadCompressed}>Download an Image</button>
         </div>
       )}
+      <UploadedFile
+        name="image.png"
+        image="https://ybis.ru/wp-content/uploads/2023/09/pikselnye-fony-2.webp"
+        progress={50}
+        status="success"
+        type="image/png"
+        size={10000}
+      />
 
       {errorMessage && <p className={styles.error}>{errorMessage}</p>}
     </div>

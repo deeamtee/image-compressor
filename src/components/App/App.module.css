@@ -4,6 +4,7 @@
     justify-content: center;
     text-align: center;
     padding: 24px;
+    background: linear-gradient(#E5FBFF, #FFFFFF);
   }
   
   .dropArea {
@@ -44,4 +45,8 @@
   
   .success {
     margin-bottom: 16px;
+  }
+
+  .title {
+    font-size: 1.5rem;
   }

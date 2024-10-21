@@ -15,15 +15,9 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
-#root {
-  min-height: 100vh;
-  max-width: 480px;
-  min-width: 320px;
-  margin: 0 auto;
-}
-
 body {
   font-size: 16px;
+  min-width: 320px;
 }
 
 h1 {
