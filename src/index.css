@@ -18,6 +18,7 @@
 body {
   font-size: 16px;
   min-width: 320px;
+  color: #222;
 }
 
 h1 {
@@ -38,7 +39,7 @@ h5 {
 h6 {
   font-size: 0.75rem;
 }
-
+/* 
 button {
   border-radius: 8px;
   border: 1px solid transparent;
@@ -56,4 +57,4 @@ button:hover {
 button:focus,
 button:focus-visible {
   outline: 4px auto -webkit-focus-ring-color;
-}
+} */

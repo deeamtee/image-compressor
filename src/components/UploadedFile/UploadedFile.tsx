@@ -14,7 +14,7 @@ type Props = {
 
 export const UploadedFile: FC<Props> = ({ image, progress, name }) => {
   return (
-    <div style={{ width: '100%', margin: "0 auto" }}>
+    <div style={{ width: '100%', margin: '0 auto' }}>
       <div className={styles.file}>
         <img className={styles.image} src={image} alt={name} />
         <div className={styles.wrapper}>
@@ -28,7 +28,10 @@ export const UploadedFile: FC<Props> = ({ image, progress, name }) => {
               <p>7 KB</p>
             </div>
           </div>
+          <button className={styles.download}>
+
           <Icon variant="download" />
+          </button>
         </div>
       </div>
       <div style={{ width: `${progress}%` }}></div>

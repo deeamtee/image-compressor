@@ -75,7 +75,7 @@ export const Compressor: React.FC = () => {
         onDragLeave={handleDragLeave}
         onDrop={handleDrop}
       >
-        <p>Drag and drop an image here (SVG, JPEG, PNG)</p>
+        <p className={styles.dropAreaText}>Drag and drop an image here <br /> (SVG, JPEG, PNG)</p>
       </div>
 
       {progress > 0 && !errorMessage && (
@@ -84,12 +84,6 @@ export const Compressor: React.FC = () => {
         </div>
       )}
 
-      {compressedFile && progress === 100 && (
-        <div>
-          <p className={styles.success}>Compression complete!</p>
-          <button onClick={downloadCompressed}>Download an Image</button>
-        </div>
-      )}
       <UploadedFile
         name="image.png"
         image="https://ybis.ru/wp-content/uploads/2023/09/pikselnye-fony-2.webp"
@@ -98,6 +92,12 @@ export const Compressor: React.FC = () => {
         type="image/png"
         size={10000}
       />
+
+{compressedFile && progress === 100 || true && (
+        <div>
+          <button className={styles.download} onClick={downloadCompressed}>Download an Image</button>
+        </div>
+      )}
 
       {errorMessage && <p className={styles.error}>{errorMessage}</p>}
     </div>
