@@ -6,10 +6,9 @@ import { UploadedFile } from '../UploadedFile';
 
 export const Compressor: React.FC = () => {
   const [dragging, setDragging] = useState(false);
-  const [compressedFile, setCompressedFile] = useState<Blob | null>(null);
+  const [compressedFiles, setCompressedFiles] = useState<File[]>([]);
   const [progress, setProgress] = useState<number>(0);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
-  const fileRef = React.useRef({ name: '' });
 
   const handleDragOver = (e: React.DragEvent) => {
     e.preventDefault();
@@ -25,46 +24,41 @@ export const Compressor: React.FC = () => {
     setDragging(false);
     setProgress(0);
     setErrorMessage(null);
+    const files = e.dataTransfer.files;
 
-    const file = e.dataTransfer.files[0];
+    if (files.length === 0) return;
 
-    if (!file) return;
-    console.log(e.dataTransfer.files);
-
-    console.log(e.dataTransfer.files);
-    fileRef.current = { name: file.name };
-    try {
-      let compressed: Blob | null = null;
-
-      if (file.type === 'image/svg+xml') {
-        compressed = await compressSvg(file);
-      } else if (file.type === 'image/jpeg') {
-        compressed = await compressJpeg(file, setProgress);
-      } else if (file.type === 'image/png') {
-        compressed = await compressPng(file);
-      } else {
-        setErrorMessage('Only JPEG, PNG, and SVG images are supported');
-        return;
+    const compressedFilePromises = Array.from(files).map((file) => {
+      try {
+        if (file.type === 'image/svg+xml') {
+          return compressSvg(file);
+        }
+        if (file.type === 'image/jpeg') {
+          return compressJpeg(file, setProgress);
+        }
+        if (file.type === 'image/png') {
+          return compressPng(file);
+        }
+        return null;
+      } catch {
+        return null; // обработка невалидного файла
       }
-
-      if (compressed) {
-        setCompressedFile(compressed);
-        setProgress(100);
-      }
-    } catch {
-      setErrorMessage('Image compression error');
-    }
+    });
+    const compressedFiles = await Promise.all(compressedFilePromises).catch(() => []); // добавить обработчку для невалидного файла, перенести try catch сюда
+    const filteredCompressedFiles = compressedFiles.filter((file) => file !== null) as File[];
+    setCompressedFiles(filteredCompressedFiles);
   };
 
   const downloadCompressed = () => {
-    if (compressedFile) {
-      const blob = new Blob([compressedFile], { type: compressedFile.type });
-      const link = document.createElement('a');
-      link.href = URL.createObjectURL(blob);
-      link.download = fileRef.current.name || 'compressed.svg';
-      link.click();
-    }
+    // if (compressedFile) {
+    //   const blob = new Blob([compressedFile], { type: compressedFile.type });
+    //   const link = document.createElement('a');
+    //   link.href = URL.createObjectURL(blob);
+    //   link.download = fileRef.current.name || 'compressed.svg';
+    //   link.click();
+    // }
   };
+  console.log(compressedFiles);
 
   return (
     <div className={styles.container}>
@@ -75,7 +69,9 @@ export const Compressor: React.FC = () => {
         onDragLeave={handleDragLeave}
         onDrop={handleDrop}
       >
-        <p className={styles.dropAreaText}>Drag and drop an image here <br /> (SVG, JPEG, PNG)</p>
+        <p className={styles.dropAreaText}>
+          Drag and drop an image here <br /> (SVG, JPEG, PNG)
+        </p>
       </div>
 
       {progress > 0 && !errorMessage && (
@@ -84,18 +80,23 @@ export const Compressor: React.FC = () => {
         </div>
       )}
 
-      <UploadedFile
-        name="image.png"
-        image="https://ybis.ru/wp-content/uploads/2023/09/pikselnye-fony-2.webp"
-        progress={50}
-        status="success"
-        type="image/png"
-        size={10000}
-      />
+      {compressedFiles.map((file, index) => (
+        <UploadedFile
+          key={index}
+          name={file.name}
+          image={URL.createObjectURL(file)}
+          progress={100} // сделать анимацию прогресса для каждого файла
+          status="success"
+          type={file.type}
+          size={file?.size || 0}
+        />
+      ))}
 
-{compressedFile && progress === 100 || true && (
+      {compressedFiles.length > 0 && progress === 100 && (
         <div>
-          <button className={styles.download} onClick={downloadCompressed}>Download an Image</button>
+          <button className={styles.download} onClick={downloadCompressed}>
+            Download an Image
+          </button>
         </div>
       )}
 

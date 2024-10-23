@@ -2,236 +2,488 @@ import pako from 'pako';
 
 var UPNG = (function() {
 	
-	var _bin = {
-		nextZero   : function(data,p)  {  while(data[p]!=0) p++;  return p;  },
-		readUshort : function(buff,p)  {  return (buff[p]<< 8) | buff[p+1];  },
-		writeUshort: function(buff,p,n){  buff[p] = (n>>8)&255;  buff[p+1] = n&255;  },
-		readUint   : function(buff,p)  {  return (buff[p]*(256*256*256)) + ((buff[p+1]<<16) | (buff[p+2]<< 8) | buff[p+3]);  },
-		writeUint  : function(buff,p,n){  buff[p]=(n>>24)&255;  buff[p+1]=(n>>16)&255;  buff[p+2]=(n>>8)&255;  buff[p+3]=n&255;  },
-		readASCII  : function(buff,p,l){  var s = "";  for(var i=0; i<l; i++) s += String.fromCharCode(buff[p+i]);  return s;    },
-		writeASCII : function(data,p,s){  for(var i=0; i<s.length; i++) data[p+i] = s.charCodeAt(i);  },
-		readBytes  : function(buff,p,l){  var arr = [];   for(var i=0; i<l; i++) arr.push(buff[p+i]);   return arr;  },
-		pad : function(n) { return n.length < 2 ? "0" + n : n; },
-		readUTF8 : function(buff, p, l) {
-			var s = "", ns;
-			for(var i=0; i<l; i++) s += "%" + _bin.pad(buff[p+i].toString(16));
-			try {  ns = decodeURIComponent(s); }
-			catch(e) {  return _bin.readASCII(buff, p, l);  }
-			return  ns;
+	const _bin = {
+		nextZero: (data, p) => {
+		  while (data[p] !== 0) p++;
+		  return p;
+		},
+		readUshort: (buff, p) => (buff[p] << 8) | buff[p + 1],
+		writeUshort: (buff, p, n) => {
+		  buff[p] = (n >> 8) & 255;
+		  buff[p + 1] = n & 255;
+		},
+		readUint: (buff, p) =>
+		  buff[p] * (256 ** 3) + ((buff[p + 1] << 16) | (buff[p + 2] << 8) | buff[p + 3]),
+		writeUint: (buff, p, n) => {
+		  buff[p] = (n >> 24) & 255;
+		  buff[p + 1] = (n >> 16) & 255;
+		  buff[p + 2] = (n >> 8) & 255;
+		  buff[p + 3] = n & 255;
+		},
+		readASCII: (buff, p, l) => {
+		  let s = "";
+		  for (let i = 0; i < l; i++) s += String.fromCharCode(buff[p + i]);
+		  return s;
+		},
+		writeASCII: (data, p, s) => {
+		  for (let i = 0; i < s.length; i++) data[p + i] = s.charCodeAt(i);
+		},
+		readBytes: (buff, p, l) => {
+		  const arr = [];
+		  for (let i = 0; i < l; i++) arr.push(buff[p + i]);
+		  return arr;
+		},
+		pad: (n) => (n.length < 2 ? "0" + n : n),
+		readUTF8: (buff, p, l) => {
+		  let s = "";
+		  for (let i = 0; i < l; i++) s += "%" + _bin.pad(buff[p + i].toString(16));
+		  try {
+			return decodeURIComponent(s);
+		  } catch (e) {
+			return _bin.readASCII(buff, p, l);
+		  }
 		}
+	  };
+	  
+
+	  function toRGBA8(imageData) {
+		const { width, height, frames, tabs } = imageData;
+	
+		// Если нет анимации, просто декодируем изображение и возвращаем его.
+		if (!tabs.acTL) {
+			return [decodeImage(imageData.data, width, height, imageData).buffer];
+		}
+	
+		const decodedFrames = [];
+		
+		// Инициализируем первый кадр, если данных нет.
+		if (!frames[0].data) frames[0].data = imageData.data;
+	
+		const totalPixels = width * height * 4; // Количество пикселей * 4 (RGBA)
+		let currentFrameBuffer = new Uint8Array(totalPixels);
+		let emptyFrameBuffer = new Uint8Array(totalPixels);
+		let previousFrameBuffer = new Uint8Array(totalPixels);
+	
+		frames.forEach((frame, index) => {
+			const { rect, blend, dispose, data: frameData } = frame;
+			const { x: frameX, y: frameY, width: frameWidth, height: frameHeight } = rect;
+	
+			const decodedFrame = decodeImage(frameData, frameWidth, frameHeight, imageData);
+	
+			// Копируем предыдущий кадр, если это не первый
+			if (index !== 0) {
+				previousFrameBuffer.set(currentFrameBuffer);
+			}
+	
+			// Копируем данные кадра в зависимости от режима смешивания
+			if (blend === 0) {
+				copyTile(decodedFrame, frameWidth, frameHeight, currentFrameBuffer, width, height, frameX, frameY, false);
+			} else if (blend === 1) {
+				copyTile(decodedFrame, frameWidth, frameHeight, currentFrameBuffer, width, height, frameX, frameY, true);
+			}
+	
+			decodedFrames.push(currentFrameBuffer.slice());
+	
+			// Управляем очисткой кадра в зависимости от метода удаления
+			if (dispose === 1) {
+				// Очистить область кадра
+				copyTile(emptyFrameBuffer, frameWidth, frameHeight, currentFrameBuffer, width, height, frameX, frameY, false);
+			} else if (dispose === 2) {
+				// Восстановить предыдущий кадр
+				currentFrameBuffer.set(previousFrameBuffer);
+			}
+		});
+	
+		return decodedFrames;
 	}
-
-	function toRGBA8(out)
-	{
-		var w = out.width, h = out.height;
-		if(out.tabs.acTL==null) return [decodeImage(out.data, w, h, out).buffer];
-		
-		var frms = [];
-		if(out.frames[0].data==null) out.frames[0].data = out.data;
-		
-		var len = w*h*4, img = new Uint8Array(len), empty = new Uint8Array(len), prev=new Uint8Array(len);
-		for(var i=0; i<out.frames.length; i++)
-		{
-			var frm = out.frames[i];
-			var fx=frm.rect.x, fy=frm.rect.y, fw = frm.rect.width, fh = frm.rect.height;
-			var fdata = decodeImage(frm.data, fw,fh, out);
-			
-			if(i!=0) for(var j=0; j<len; j++) prev[j]=img[j];
-			
-			if     (frm.blend==0) _copyTile(fdata, fw, fh, img, w, h, fx, fy, 0);
-			else if(frm.blend==1) _copyTile(fdata, fw, fh, img, w, h, fx, fy, 1);
-			
-			frms.push(img.buffer.slice(0));
-			
-			if     (frm.dispose==0) {}
-			else if(frm.dispose==1) _copyTile(empty, fw, fh, img, w, h, fx, fy, 0);
-			else if(frm.dispose==2) for(var j=0; j<len; j++) img[j]=prev[j];
-		}
-		return frms;
-	}
-	function decodeImage(data, w, h, out)
-	{
-		var area = w*h, bpp = _getBPP(out);
-		var bpl = Math.ceil(w*bpp/8);	// bytes per line
-
-		var bf = new Uint8Array(area*4), bf32 = new Uint32Array(bf.buffer);
-		var ctype = out.ctype, depth = out.depth;
-		var rs = _bin.readUshort;
-		
-		var time = Date.now();
-
-		if     (ctype==6) { // RGB + alpha
-			var qarea = area<<2;
-			if(depth== 8) for(var i=0; i<qarea;i+=4) {  bf[i] = data[i];  bf[i+1] = data[i+1];  bf[i+2] = data[i+2];  bf[i+3] = data[i+3]; }
-			if(depth==16) for(var i=0; i<qarea;i++ ) {  bf[i] = data[i<<1];  }
-		}
-		else if(ctype==2) {	// RGB
-			var ts=out.tabs["tRNS"];
-			if(ts==null) {
-				if(depth== 8) for(var i=0; i<area; i++) {  var ti=i*3;  bf32[i] = (255<<24)|(data[ti+2]<<16)|(data[ti+1]<<8)|data[ti];  }
-				if(depth==16) for(var i=0; i<area; i++) {  var ti=i*6;  bf32[i] = (255<<24)|(data[ti+4]<<16)|(data[ti+2]<<8)|data[ti];  }
-			}
-			else {  var tr=ts[0], tg=ts[1], tb=ts[2];
-				if(depth== 8) for(var i=0; i<area; i++) {  var qi=i<<2, ti=i*3;  bf32[i] = (255<<24)|(data[ti+2]<<16)|(data[ti+1]<<8)|data[ti];
-					if(data[ti]   ==tr && data[ti+1]   ==tg && data[ti+2]   ==tb) bf[qi+3] = 0;  }
-				if(depth==16) for(var i=0; i<area; i++) {  var qi=i<<2, ti=i*6;  bf32[i] = (255<<24)|(data[ti+4]<<16)|(data[ti+2]<<8)|data[ti];
-					if(rs(data,ti)==tr && rs(data,ti+2)==tg && rs(data,ti+4)==tb) bf[qi+3] = 0;  }
-			}
-		}
-		else if(ctype==3) {	// palette
-			var p=out.tabs["PLTE"], ap=out.tabs["tRNS"], tl=ap?ap.length:0;
-
-            if(depth==1) for(var y=0; y<h; y++) {  var s0 = y*bpl, t0 = y*w;
-				for(var i=0; i<w; i++) { var qi=(t0+i)<<2, j=((data[s0+(i>>3)]>>(7-((i&7)<<0)))& 1), cj=3*j;  bf[qi]=p[cj];  bf[qi+1]=p[cj+1];  bf[qi+2]=p[cj+2];  bf[qi+3]=(j<tl)?ap[j]:255;  }
-			}
-			if(depth==2) for(var y=0; y<h; y++) {  var s0 = y*bpl, t0 = y*w;
-				for(var i=0; i<w; i++) { var qi=(t0+i)<<2, j=((data[s0+(i>>2)]>>(6-((i&3)<<1)))& 3), cj=3*j;  bf[qi]=p[cj];  bf[qi+1]=p[cj+1];  bf[qi+2]=p[cj+2];  bf[qi+3]=(j<tl)?ap[j]:255;  }
-			}
-			if(depth==4) for(var y=0; y<h; y++) {  var s0 = y*bpl, t0 = y*w;
-				for(var i=0; i<w; i++) { var qi=(t0+i)<<2, j=((data[s0+(i>>1)]>>(4-((i&1)<<2)))&15), cj=3*j;  bf[qi]=p[cj];  bf[qi+1]=p[cj+1];  bf[qi+2]=p[cj+2];  bf[qi+3]=(j<tl)?ap[j]:255;  }
-			}
-			if(depth==8) for(var i=0; i<area; i++ ) {  var qi=i<<2, j=data[i]                      , cj=3*j;  bf[qi]=p[cj];  bf[qi+1]=p[cj+1];  bf[qi+2]=p[cj+2];  bf[qi+3]=(j<tl)?ap[j]:255;  }
-		}
-		else if(ctype==4) {	// gray + alpha
-			if(depth== 8)  for(var i=0; i<area; i++) {  var qi=i<<2, di=i<<1, gr=data[di];  bf[qi]=gr;  bf[qi+1]=gr;  bf[qi+2]=gr;  bf[qi+3]=data[di+1];  }
-			if(depth==16)  for(var i=0; i<area; i++) {  var qi=i<<2, di=i<<2, gr=data[di];  bf[qi]=gr;  bf[qi+1]=gr;  bf[qi+2]=gr;  bf[qi+3]=data[di+2];  }
-		}
-		else if(ctype==0) {	// gray
-			var tr = out.tabs["tRNS"] ? out.tabs["tRNS"] : -1;
-			for(var y=0; y<h; y++) {
-				var off = y*bpl, to = y*w;
-				if     (depth== 1) for(var x=0; x<w; x++) {  var gr=255*((data[off+(x>>>3)]>>>(7 -((x&7)   )))& 1), al=(gr==tr*255)?0:255;  bf32[to+x]=(al<<24)|(gr<<16)|(gr<<8)|gr;  }
-				else if(depth== 2) for(var x=0; x<w; x++) {  var gr= 85*((data[off+(x>>>2)]>>>(6 -((x&3)<<1)))& 3), al=(gr==tr* 85)?0:255;  bf32[to+x]=(al<<24)|(gr<<16)|(gr<<8)|gr;  }
-				else if(depth== 4) for(var x=0; x<w; x++) {  var gr= 17*((data[off+(x>>>1)]>>>(4 -((x&1)<<2)))&15), al=(gr==tr* 17)?0:255;  bf32[to+x]=(al<<24)|(gr<<16)|(gr<<8)|gr;  }
-				else if(depth== 8) for(var x=0; x<w; x++) {  var gr=data[off+     x], al=(gr                 ==tr)?0:255;  bf32[to+x]=(al<<24)|(gr<<16)|(gr<<8)|gr;  }
-				else if(depth==16) for(var x=0; x<w; x++) {  var gr=data[off+(x<<1)], al=(rs(data,off+(x<<1))==tr)?0:255;  bf32[to+x]=(al<<24)|(gr<<16)|(gr<<8)|gr;  }
-			}
-		}
-		return bf;
-	}
-
-
-
-	function decode(buff)
-	{
-		var data = new Uint8Array(buff), offset = 8, bin = _bin, rUs = bin.readUshort, rUi = bin.readUint;
-		var out = {tabs:{}, frames:[]};
-		var dd = new Uint8Array(data.length), doff = 0;	 // put all IDAT data into it
-		var fd, foff = 0;	// frames
-		
-		var mgck = [0x89, 0x50, 0x4e, 0x47, 0x0d, 0x0a, 0x1a, 0x0a];
-		for(var i=0; i<8; i++) if(data[i]!=mgck[i]) throw "The input is not a PNG file!";
-
-		while(offset<data.length)
-		{
-			var len  = bin.readUint(data, offset);  offset += 4;
-			var type = bin.readASCII(data, offset, 4);  offset += 4;
-			
-			if     (type=="IHDR")  {  _IHDR(data, offset, out);  }
-			else if(type=="iCCP")  {
-				var off = offset;  while(data[off]!=0) off++;
-				var nam = bin.readASCII(data,offset,off-offset);
-				var cpr = data[off+1];
-				var fil = data.slice(off+2,offset+len);
-				var res = null;
-				try { res = _inflate(fil); } catch(e) {  res = inflateRaw(fil);  }
-				out.tabs[type] = res;
-			}
-			else if(type=="CgBI")  {  out.tabs[type] = data.slice(offset,offset+4);  }
-			else if(type=="IDAT") {
-				for(var i=0; i<len; i++) dd[doff+i] = data[offset+i];
-				doff += len;
-			}
-			else if(type=="acTL")  {
-				out.tabs[type] = {  num_frames:rUi(data, offset), num_plays:rUi(data, offset+4)  };
-				fd = new Uint8Array(data.length);
-			}
-			else if(type=="fcTL")  {
-				if(foff!=0) {  var fr = out.frames[out.frames.length-1];
-					fr.data = _decompress(out, fd.slice(0,foff), fr.rect.width, fr.rect.height);  foff=0;
+	
+	function decodeImage(data, width, height, imageData) {
+		const totalPixels = width * height;
+		const bitsPerPixel = getBitsPerPixel(imageData);
+		const bytesPerRow = Math.ceil((width * bitsPerPixel) / 8); // байтов на строку
+	
+		const rgbaBuffer = new Uint8Array(totalPixels * 4); // буфер для RGBA
+		const rgbaBuffer32 = new Uint32Array(rgbaBuffer.buffer); // для быстрого присвоения 32-битными словами
+	
+		const { ctype: colorType, depth, tabs } = imageData;
+		const transparencyData = tabs.tRNS;
+		const palette = tabs.PLTE;
+	
+		if (colorType === 6) {
+			// RGB с альфа-каналом
+			if (depth === 8) {
+				for (let i = 0; i < totalPixels * 4; i++) {
+					rgbaBuffer[i] = data[i];
 				}
-				var rct = {x:rUi(data, offset+12),y:rUi(data, offset+16),width:rUi(data, offset+4),height:rUi(data, offset+8)};
-				var del = rUs(data, offset+22);  del = rUs(data, offset+20) / (del==0?100:del);
-				var frm = {rect:rct, delay:Math.round(del*1000), dispose:data[offset+24], blend:data[offset+25]};
-				out.frames.push(frm);
-			}
-			else if(type=="fdAT") {
-				for(var i=0; i<len-4; i++) fd[foff+i] = data[offset+i+4];
-				foff += len-4;
-			}
-			else if(type=="pHYs") {
-				out.tabs[type] = [bin.readUint(data, offset), bin.readUint(data, offset+4), data[offset+8]];
-			}
-			else if(type=="cHRM") {
-				out.tabs[type] = [];
-				for(var i=0; i<8; i++) out.tabs[type].push(bin.readUint(data, offset+i*4));
-			}
-			else if(type=="tEXt" || type=="zTXt") {
-				if(out.tabs[type]==null) out.tabs[type] = {};
-				var nz = bin.nextZero(data, offset);
-				var keyw = bin.readASCII(data, offset, nz-offset);
-				var text, tl=offset+len-nz-1;
-				if(type=="tEXt") text = bin.readASCII(data, nz+1, tl);
-				else {
-					var bfr = _inflate(data.slice(nz+2,nz+2+tl));
-					text = bin.readUTF8(bfr,0,bfr.length);
+			} else if (depth === 16) {
+				for (let i = 0; i < totalPixels * 4; i++) {
+					rgbaBuffer[i] = data[i * 2]; // 16-битное значение
 				}
-				out.tabs[type][keyw] = text;
 			}
-			else if(type=="iTXt") {
-				if(out.tabs[type]==null) out.tabs[type] = {};
-				var nz = 0, off = offset;
-				nz = bin.nextZero(data, off);
-				var keyw = bin.readASCII(data, off, nz-off);  off = nz + 1;
-				var cflag = data[off], cmeth = data[off+1];  off+=2;
-				nz = bin.nextZero(data, off);
-				var ltag = bin.readASCII(data, off, nz-off);  off = nz + 1;
-				nz = bin.nextZero(data, off);
-				var tkeyw = bin.readUTF8(data, off, nz-off);  off = nz + 1;
-				var text, tl=len-(off-offset);
-				if(cflag==0) text  = bin.readUTF8(data, off, tl);
-				else {
-					var bfr = _inflate(data.slice(off,off+tl));
-					text = bin.readUTF8(bfr,0,bfr.length);
+		} else if (colorType === 2) {
+			// RGB без альфа
+			if (!transparencyData) {
+				if (depth === 8) {
+					for (let i = 0; i < totalPixels; i++) {
+						rgbaBuffer32[i] = (255 << 24) | (data[i * 3 + 2] << 16) | (data[i * 3 + 1] << 8) | data[i * 3];
+					}
+				} else if (depth === 16) {
+					for (let i = 0; i < totalPixels; i++) {
+						rgbaBuffer32[i] = (255 << 24) | (data[i * 6 + 4] << 16) | (data[i * 6 + 2] << 8) | data[i * 6];
+					}
 				}
-				out.tabs[type][keyw] = text;
+			} else {
+				const [transparentRed, transparentGreen, transparentBlue] = transparencyData;
+				if (depth === 8) {
+					for (let i = 0; i < totalPixels; i++) {
+						const [red, green, blue] = [data[i * 3], data[i * 3 + 1], data[i * 3 + 2]];
+						const alpha = (red === transparentRed && green === transparentGreen && blue === transparentBlue) ? 0 : 255;
+						rgbaBuffer32[i] = (alpha << 24) | (blue << 16) | (green << 8) | red;
+					}
+				} else if (depth === 16) {
+					for (let i = 0; i < totalPixels; i++) {
+						const [red, green, blue] = [data[i * 6], data[i * 6 + 2], data[i * 6 + 4]];
+						const alpha = (readUShort(data, i * 6) === transparentRed && readUShort(data, i * 6 + 2) === transparentGreen && readUShort(data, i * 6 + 4) === transparentBlue) ? 0 : 255;
+						rgbaBuffer32[i] = (alpha << 24) | (blue << 16) | (green << 8) | red;
+					}
+				}
 			}
-			else if(type=="PLTE") {
-				out.tabs[type] = bin.readBytes(data, offset, len);
+		} else if (colorType === 3) {
+			// Палитра
+			const alphaPalette = transparencyData || [];
+			const alphaPaletteLength = alphaPalette.length;
+	
+			for (let i = 0; i < totalPixels; i++) {
+				const paletteIndex = data[i];
+				const [r, g, b] = [palette[paletteIndex * 3], palette[paletteIndex * 3 + 1], palette[paletteIndex * 3 + 2]];
+				const alpha = paletteIndex < alphaPaletteLength ? alphaPalette[paletteIndex] : 255;
+				rgbaBuffer32[i] = (alpha << 24) | (b << 16) | (g << 8) | r;
 			}
-			else if(type=="hIST") {
-				var pl = out.tabs["PLTE"].length/3;
-				out.tabs[type] = [];  for(var i=0; i<pl; i++) out.tabs[type].push(rUs(data, offset+i*2));
+		} else if (colorType === 4) {
+			// Градации серого с альфа
+			if (depth === 8) {
+				for (let i = 0; i < totalPixels; i++) {
+					const gray = data[i * 2];
+					rgbaBuffer32[i] = (data[i * 2 + 1] << 24) | (gray << 16) | (gray << 8) | gray;
+				}
+			} else if (depth === 16) {
+				for (let i = 0; i < totalPixels; i++) {
+					const gray = data[i * 4];
+					rgbaBuffer32[i] = (data[i * 4 + 2] << 24) | (gray << 16) | (gray << 8) | gray;
+				}
 			}
-			else if(type=="tRNS") {
-				if     (out.ctype==3) out.tabs[type] = bin.readBytes(data, offset, len);
-				else if(out.ctype==0) out.tabs[type] = rUs(data, offset);
-				else if(out.ctype==2) out.tabs[type] = [ rUs(data,offset),rUs(data,offset+2),rUs(data,offset+4) ];
-				//else console.log("tRNS for unsupported color type",out.ctype, len);
+		} else if (colorType === 0) {
+			// Градации серого
+			const transparentGray = transparencyData ? transparencyData[0] : -1;
+	
+			for (let y = 0; y < height; y++) {
+				const rowStartIndex = y * width;
+				for (let x = 0; x < width; x++) {
+					let gray = 0;
+					if (depth === 1) {
+						gray = 255 * ((data[rowStartIndex + (x >> 3)] >> (7 - (x % 8))) & 1);
+					} else if (depth === 2) {
+						gray = 85 * ((data[rowStartIndex + (x >> 2)] >> (6 - ((x % 4) * 2))) & 3);
+					} else if (depth === 4) {
+						gray = 17 * ((data[rowStartIndex + (x >> 1)] >> (4 - ((x % 2) * 4))) & 15);
+					} else if (depth === 8) {
+						gray = data[rowStartIndex + x];
+					} else if (depth === 16) {
+						gray = data[rowStartIndex + (x * 2)];
+					}
+	
+					const alpha = gray === transparentGray * 255 ? 0 : 255;
+					rgbaBuffer32[rowStartIndex + x] = (alpha << 24) | (gray << 16) | (gray << 8) | gray;
+				}
 			}
-			else if(type=="gAMA") out.tabs[type] = bin.readUint(data, offset)/100000;
-			else if(type=="sRGB") out.tabs[type] = data[offset];
-			else if(type=="bKGD")
-			{
-				if     (out.ctype==0 || out.ctype==4) out.tabs[type] = [rUs(data, offset)];
-				else if(out.ctype==2 || out.ctype==6) out.tabs[type] = [rUs(data, offset), rUs(data, offset+2), rUs(data, offset+4)];
-				else if(out.ctype==3) out.tabs[type] = data[offset];
-			}
-			else if(type=="IEND") {
-				break;
-			}
-			//else {  console.log("unknown chunk type", type, len);  out.tabs[type]=data.slice(offset,offset+len);  }
-			offset += len;
-			var crc = bin.readUint(data, offset);  offset += 4;
 		}
-		if(foff!=0) {  var fr = out.frames[out.frames.length-1];
-			fr.data = _decompress(out, fd.slice(0,foff), fr.rect.width, fr.rect.height);
-		}	
-		out.data = _decompress(out, dd, out.width, out.height);
-		
-		delete out.compress;  delete out.interlace;  delete out.filter;
-		return out;
+	
+		return rgbaBuffer;
 	}
+	
+	function decode(buffer) {
+		const data = new Uint8Array(buffer);
+		let offset = 8; // Начинаем с 8 байта (пропускаем заголовок PNG)
+		const bin = _bin;
+		const readUshort = bin.readUshort;
+		const readUint = bin.readUint;
+	
+		const output = { tabs: {}, frames: [] }; // Основной объект для выходных данных
+		const idatData = new Uint8Array(data.length); // Для хранения всех IDAT данных
+		let idatOffset = 0; // Смещение для IDAT
+		let frameData; // Хранит данные кадров
+		let frameOffset = 0; // Смещение для кадров
+	
+		// Проверка заголовка PNG
+		const pngHeader = [0x89, 0x50, 0x4e, 0x47, 0x0d, 0x0a, 0x1a, 0x0a];
+		for (let i = 0; i < pngHeader.length; i++) {
+			if (data[i] !== pngHeader[i]) throw new Error("The input is not a PNG file!");
+		}
+	
+		// Обработка каждого чанка
+		while (offset < data.length) {
+			const chunkLength = readUint(data, offset); 
+			offset += 4; // Пропускаем длину
+			const chunkType = bin.readASCII(data, offset, 4);
+			offset += 4; // Пропускаем тип
+	
+			switch (chunkType) {
+				case "IHDR":
+					_IHDR(data, offset, output);
+					break;
+	
+				case "iCCP":
+					handleICCProfile(data, offset, chunkLength, output, bin);
+					break;
+	
+				case "CgBI":
+					output.tabs[chunkType] = data.slice(offset, offset + 4);
+					break;
+	
+				case "IDAT":
+					copyIdatData(data, offset, chunkLength, idatData, idatOffset);
+					idatOffset += chunkLength;
+					break;
+	
+				case "acTL":
+					handleAnimationControl(data, offset, output);
+					frameData = new Uint8Array(data.length);
+					break;
+	
+				case "fcTL":
+					handleFrameControl(data, offset, output, frameData, frameOffset);
+					frameOffset = 0; // Сброс смещения для кадров
+					break;
+	
+				case "fdAT":
+					copyFrameData(data, offset, chunkLength, frameData, frameOffset);
+					frameOffset += chunkLength - 4; // Вычитаем 4, так как fdAT содержит длину
+					break;
+	
+				case "pHYs":
+					output.tabs[chunkType] = [
+						readUint(data, offset),
+						readUint(data, offset + 4),
+						data[offset + 8],
+					];
+					break;
+	
+				case "cHRM":
+					output.tabs[chunkType] = readChunkData(data, offset, chunkLength, readUint);
+					break;
+	
+				case "tEXt":
+				case "zTXt":
+					handleTextChunks(data, offset, chunkLength, output, bin, chunkType);
+					break;
+	
+				case "iTXt":
+					handleInternationalTextChunk(data, offset, chunkLength, output, bin);
+					break;
+	
+				case "PLTE":
+					output.tabs[chunkType] = bin.readBytes(data, offset, chunkLength);
+					break;
+	
+				case "hIST":
+					handleHistogram(data, offset, output);
+					break;
+	
+				case "tRNS":
+					handleTransparency(data, offset, chunkLength, output);
+					break;
+	
+				case "gAMA":
+					output.tabs[chunkType] = readUint(data, offset) / 100000;
+					break;
+	
+				case "sRGB":
+					output.tabs[chunkType] = data[offset];
+					break;
+	
+				case "bKGD":
+					handleBackgroundColor(data, offset, output);
+					break;
+	
+				case "IEND":
+					break;
+	
+				default:
+					// Неизвестный тип чанка (возможно, его стоит логировать)
+					// console.log("unknown chunk type", chunkType, chunkLength);
+					output.tabs[chunkType] = data.slice(offset, offset + chunkLength);
+					break;
+			}
+	
+			offset += chunkLength; // Переход к следующему чанку
+			const crc = readUint(data, offset); // Чтение CRC (не используется)
+			offset += 4; // Пропускаем CRC
+		}
+	
+		// Завершение последнего кадра, если необходимо
+		if (frameOffset !== 0) {
+			const lastFrame = output.frames[output.frames.length - 1];
+			lastFrame.data = _decompress(output, frameData.slice(0, frameOffset), lastFrame.rect.width, lastFrame.rect.height);
+		}
+	
+		output.data = _decompress(output, idatData, output.width, output.height);
+		
+		// Удаление неиспользуемых свойств
+		delete output.compress;
+		delete output.interlace;
+		delete output.filter;
+	
+		return output;
+	}
+	
+	// Обработчики для различных типов чанков
+	function handleICCProfile(data, offset, length, output, bin) {
+		let profileOffset = offset;
+		while (data[profileOffset] !== 0) profileOffset++;
+		const name = bin.readASCII(data, offset, profileOffset - offset);
+		const compressionMethod = data[profileOffset + 1];
+		const profileData = data.slice(profileOffset + 2, offset + length);
+		let result;
+		try {
+			result = _inflate(profileData);
+		} catch (e) {
+			result = inflateRaw(profileData);
+		}
+		output.tabs["iCCP"] = result;
+	}
+	
+	function copyIdatData(data, offset, length, idatData, idatOffset) {
+		for (let i = 0; i < length; i++) {
+			idatData[idatOffset + i] = data[offset + i];
+		}
+	}
+	
+	function handleAnimationControl(data, offset, output) {
+		output.tabs["acTL"] = {
+			num_frames: readUint(data, offset),
+			num_plays: readUint(data, offset + 4),
+		};
+	}
+	
+	function handleFrameControl(data, offset, output, frameData, frameOffset) {
+		if (frameOffset !== 0) {
+			const lastFrame = output.frames[output.frames.length - 1];
+			lastFrame.data = _decompress(output, frameData.slice(0, frameOffset), lastFrame.rect.width, lastFrame.rect.height);
+		}
+	
+		const rectangle = {
+			x: readUint(data, offset + 12),
+			y: readUint(data, offset + 16),
+			width: readUint(data, offset + 4),
+			height: readUint(data, offset + 8),
+		};
+		const delay = Math.round(readUshort(data, offset + 20) / (readUshort(data, offset + 22) || 100) * 1000);
+		const frame = {
+			rect: rectangle,
+			delay: delay,
+			dispose: data[offset + 24],
+			blend: data[offset + 25],
+		};
+		output.frames.push(frame);
+	}
+	
+	function copyFrameData(data, offset, length, frameData, frameOffset) {
+		for (let i = 0; i < length - 4; i++) {
+			frameData[frameOffset + i] = data[offset + i + 4];
+		}
+	}
+	
+	function readChunkData(data, offset, length, readFn) {
+		const chunkData = [];
+		for (let i = 0; i < length / 4; i++) {
+			chunkData.push(readFn(data, offset + i * 4));
+		}
+		return chunkData;
+	}
+	
+	function handleTextChunks(data, offset, length, output, bin, chunkType) {
+		if (output.tabs[chunkType] == null) output.tabs[chunkType] = {};
+		const zeroIndex = bin.nextZero(data, offset);
+		const keyword = bin.readASCII(data, offset, zeroIndex - offset);
+		const textLength = offset + length - zeroIndex - 1;
+		let text;
+	
+		if (chunkType === "tEXt") {
+			text = bin.readASCII(data, zeroIndex + 1, textLength);
+		} else {
+			const compressedData = _inflate(data.slice(zeroIndex + 2, zeroIndex + 2 + textLength));
+			text = bin.readUTF8(compressedData, 0, compressedData.length);
+		}
+	
+		output.tabs[chunkType][keyword] = text;
+	}
+	
+	function handleInternationalTextChunk(data, offset, length, output, bin) {
+		if (output.tabs["iTXt"] == null) output.tabs["iTXt"] = {};
+		let zeroIndex = 0;
+		let currentOffset = offset;
+	
+		zeroIndex = bin.nextZero(data, currentOffset);
+		const keyword = bin.readASCII(data, currentOffset, zeroIndex - currentOffset);
+		currentOffset = zeroIndex + 1;
+	
+		const compressionFlag = data[currentOffset];
+		const compressionMethod = data[currentOffset + 1];
+		currentOffset += 2;
+	
+		zeroIndex = bin.nextZero(data, currentOffset);
+		const languageTag = bin.readASCII(data, currentOffset, zeroIndex - currentOffset);
+		currentOffset = zeroIndex + 1;
+	
+		zeroIndex = bin.nextZero(data, currentOffset);
+		const translatedKeyword = bin.readUTF8(data, currentOffset, zeroIndex - currentOffset);
+		currentOffset = zeroIndex + 1;
+	
+		const textLength = offset + length - currentOffset;
+		let text;
+		if (compressionFlag) {
+			const compressedData = _inflate(data.slice(currentOffset, currentOffset + textLength));
+			text = bin.readUTF8(compressedData, 0, compressedData.length);
+		} else {
+			text = bin.readASCII(data, currentOffset, textLength);
+		}
+	
+		output.tabs["iTXt"][keyword] = {
+			languageTag: languageTag,
+			translatedKeyword: translatedKeyword,
+			text: text,
+		};
+	}
+	
+	function handleHistogram(data, offset, output) {
+		output.tabs["hIST"] = [];
+		for (let i = 0; i < data.length - offset; i += 2) {
+			output.tabs["hIST"].push(readUshort(data, offset + i));
+		}
+	}
+	
+	function handleTransparency(data, offset, length, output) {
+		const alphaLength = length === 6 ? output.tabs.PLTE.length : length;
+		output.tabs["tRNS"] = new Uint8Array(alphaLength);
+		for (let i = 0; i < alphaLength; i++) {
+			output.tabs["tRNS"][i] = data[offset + i];
+		}
+	}
+	
+	function handleBackgroundColor(data, offset, output) {
+		if (data.length === 6) {
+			output.tabs["bKGD"] = {
+				index: data[offset],
+			};
+		} else {
+			output.tabs["bKGD"] = {
+				r: data[offset],
+				g: data[offset + 1],
+				b: data[offset + 2],
+			};
+		}
+	}
+	
 
 	function _decompress(out, dd, w, h) {
 		var bpp = _getBPP(out), bpl = Math.ceil(w*bpp/8), buff = new Uint8Array((bpl+1+out.interlace)*h);
