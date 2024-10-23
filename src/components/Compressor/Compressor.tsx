@@ -1,12 +1,19 @@
 import React, { useState } from 'react';
+import JSZip from 'jszip';
 import styles from './Compressor.module.css';
 import cn from 'clsx';
 import { compressJpeg, compressPng, compressSvg } from './Compressor.helpers';
 import { UploadedFile } from '../UploadedFile';
+import { downloadFile } from '../../utils/helpers';
+
+interface CompressedFile {
+  originalFile: File;
+  compressedFile: File;
+}
 
 export const Compressor: React.FC = () => {
   const [dragging, setDragging] = useState(false);
-  const [compressedFiles, setCompressedFiles] = useState<File[]>([]);
+  const [compressedFiles, setCompressedFiles] = useState<CompressedFile[]>([]);
   const [progress, setProgress] = useState<number>(0);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
@@ -28,38 +35,43 @@ export const Compressor: React.FC = () => {
 
     if (files.length === 0) return;
 
-    const compressedFilePromises = Array.from(files).map((file) => {
+    const compressedFilePromises = Array.from(files).map(async (file) => {
       try {
+        let compressedFile: File | null = null;
         if (file.type === 'image/svg+xml') {
-          return compressSvg(file);
+          compressedFile = await compressSvg(file);
+        } else if (file.type === 'image/jpeg') {
+          compressedFile = await compressJpeg(file, setProgress);
+        } else if (file.type === 'image/png') {
+          compressedFile = await compressPng(file);
         }
-        if (file.type === 'image/jpeg') {
-          return compressJpeg(file, setProgress);
-        }
-        if (file.type === 'image/png') {
-          return compressPng(file);
-        }
-        return null;
+        return compressedFile ? { originalFile: file, compressedFile } : null;
       } catch {
         return null; // обработка невалидного файла
       }
     });
-    const compressedFiles = await Promise.all(compressedFilePromises).catch(() => []); // добавить обработчку для невалидного файла, перенести try catch сюда
-    const filteredCompressedFiles = compressedFiles.filter((file) => file !== null) as File[];
+
+    const compressedFiles = await Promise.all(compressedFilePromises).catch(() => []); // добавить обработку для невалидного файла
+    const filteredCompressedFiles = compressedFiles.filter(
+      (file) => file !== null
+    ) as CompressedFile[];
     setCompressedFiles(filteredCompressedFiles);
   };
 
-  const downloadCompressed = () => {
-    // if (compressedFile) {
-    //   const blob = new Blob([compressedFile], { type: compressedFile.type });
-    //   const link = document.createElement('a');
-    //   link.href = URL.createObjectURL(blob);
-    //   link.download = fileRef.current.name || 'compressed.svg';
-    //   link.click();
-    // }
+  const handleDownloadAll = async () => {
+    const zip = new JSZip();
+  
+    compressedFiles.forEach(({ compressedFile }) => {
+      zip.file(compressedFile.name, compressedFile);
+    });
+  
+    const zipBlob = await zip.generateAsync({ type: 'blob' });
+    const zipFileName = 'compressed_images.zip';
+    
+    downloadFile(zipBlob, zipFileName);
   };
-  console.log(compressedFiles);
-
+  
+  
   return (
     <div className={styles.container}>
       <h1 className={styles.title}>Images Compressor</h1>
@@ -80,21 +92,17 @@ export const Compressor: React.FC = () => {
         </div>
       )}
 
-      {compressedFiles.map((file, index) => (
+      {compressedFiles.map(({ originalFile, compressedFile }, index) => (
         <UploadedFile
           key={index}
-          name={file.name}
-          image={URL.createObjectURL(file)}
-          progress={100} // сделать анимацию прогресса для каждого файла
-          status="success"
-          type={file.type}
-          size={file?.size || 0}
+          originalFile={originalFile}
+          compressedFile={compressedFile}
         />
       ))}
 
       {compressedFiles.length > 0 && progress === 100 && (
         <div>
-          <button className={styles.download} onClick={downloadCompressed}>
+          <button className={styles.download} onClick={handleDownloadAll}>
             Download an Image
           </button>
         </div>

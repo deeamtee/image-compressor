@@ -65,3 +65,10 @@
 .download:active {
   transform: scale(0.97);
 }
+
+.title p {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 162px; 
+}
