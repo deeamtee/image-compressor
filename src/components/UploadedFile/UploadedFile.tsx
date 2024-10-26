@@ -31,8 +31,8 @@ export const UploadedFile: FC<Props> = ({ compressedFile, originalFile }) => {
   
 
   return (
-    <div style={{ width: '100%', margin: '0 auto 12px' }}>
-      <div className={styles.file}>
+    <div className={styles.container}>
+    <div className={styles.file}>
         <img className={styles.image} src={image} alt={name} />
         <div className={styles.wrapper}>
           <div className={styles.info}>

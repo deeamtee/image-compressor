@@ -8,7 +8,7 @@
   box-sizing: border-box;
 
   /* удалить перед деплоем*/
-  max-width: 320px;
+  max-width: 324px;
   margin: auto;
   border: 1px solid #ccc;
 }
@@ -60,7 +60,7 @@
 }
 
 .download {
-  margin-top: 24px;
+  margin-top: 8px;
   padding: 6px 0;
   width: 100%;
   box-sizing: border-box;
@@ -82,4 +82,22 @@
 
 .download:active {
   box-shadow: none;
+}
+.uploadedFiles {
+  max-height: 256px;
+  overflow: auto;
+  scrollbar-width: none;
+  scrollbar-color: #8ac5ff #ffffff;
+}
+
+.uploadedFiles::-webkit-scrollbar {
+  width: 0px; /* Ширина всего элемента навигации */
+}
+
+.uploadedFiles::-webkit-scrollbar-track {
+  background: #ffffff; /* Цвет дорожки */
+}
+
+.uploadedFiles::-webkit-scrollbar-thumb {
+  background-color: #8ac5ff; /* Цвет бегунка */
 }

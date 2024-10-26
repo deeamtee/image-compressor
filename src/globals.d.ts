@@ -17,6 +17,7 @@ declare global {
 
   interface Window {
     UPNG: UPNG;
+    pngquant: any;
   }
 }
 

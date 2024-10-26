@@ -55,23 +55,22 @@ export const Compressor: React.FC = () => {
     const filteredCompressedFiles = compressedFiles.filter(
       (file) => file !== null
     ) as CompressedFile[];
-    setCompressedFiles(filteredCompressedFiles);
+    setCompressedFiles((prev) => filteredCompressedFiles.concat(prev)); // добавить обработку для невалидного файла filteredCompressedFiles);
   };
 
   const handleDownloadAll = async () => {
     const zip = new JSZip();
-  
+
     compressedFiles.forEach(({ compressedFile }) => {
       zip.file(compressedFile.name, compressedFile);
     });
-  
+
     const zipBlob = await zip.generateAsync({ type: 'blob' });
     const zipFileName = 'compressed_images.zip';
-    
+
     downloadFile(zipBlob, zipFileName);
   };
-  
-  
+
   return (
     <div className={styles.container}>
       <h1 className={styles.title}>Images Compressor</h1>
@@ -85,29 +84,25 @@ export const Compressor: React.FC = () => {
           Drag and drop an image here <br /> (SVG, JPEG, PNG)
         </p>
       </div>
-
+      {/* 
       {progress > 0 && !errorMessage && (
         <div className={styles.progress}>
           <div className={styles.progressBar} style={{ width: `${progress}%` }}></div>
         </div>
-      )}
+      )} */}
+      <div className={styles.uploadedFiles}>
+        {compressedFiles.map(({ originalFile, compressedFile }, index) => (
+          <UploadedFile key={index} originalFile={originalFile} compressedFile={compressedFile} />
+        ))}
+      </div>
 
-      {compressedFiles.map(({ originalFile, compressedFile }, index) => (
-        <UploadedFile
-          key={index}
-          originalFile={originalFile}
-          compressedFile={compressedFile}
-        />
-      ))}
-
-      {compressedFiles.length > 0 && progress === 100 && (
+      {compressedFiles.length > 0 && (
         <div>
           <button className={styles.download} onClick={handleDownloadAll}>
-            Download an Image
+            Download ZIP
           </button>
         </div>
       )}
-
       {errorMessage && <p className={styles.error}>{errorMessage}</p>}
     </div>
   );

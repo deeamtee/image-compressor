@@ -28,7 +28,7 @@
 }
 
 .title {
-  font-size: 9px;
+  font-size: 10px;
   font-weight: 700;
   line-height: 1.4;
 }
@@ -38,7 +38,7 @@
 }
 
 .sizes {
-  font-size: 9px;
+  font-size: 10px;
   font-weight: 400;
   margin-top: 4px;
   line-height: 1.4;
@@ -70,5 +70,9 @@
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
-  max-width: 162px; 
+  max-width: 158px; 
+}
+
+.container {
+  margin-bottom: 12px; 
 }
