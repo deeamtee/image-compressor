@@ -6,7 +6,7 @@
  * @return {object}            Object containing processed png image data in `data` key
  */
 
-export default function pngquant(file, options, printF) {
+export function pngquant(file, options, printF) {
 	/* Wrapper around pngquant exec */
 
 	// This is to handle the case when we call the function without any argument in order to save it

@@ -1,6 +1,6 @@
 import imageCompression from 'browser-image-compression';
 import { optimize } from 'svgo';
-import pngquant from '../../utils/pngquant';
+import { pngquant } from '../../utils/pngquant';
 import { dataURLtoUint8 } from '../../utils/helpers';
 
 export function compressPng(file: File) {
@@ -8,20 +8,20 @@ export function compressPng(file: File) {
 
   return new Promise<File | null>((resolve, reject) => {
     reader.onload = async (event) => {
-      const inputImageData = dataURLtoUint8(event.target?.result);
+      const inputImageData = dataURLtoUint8(event.target?.result as string);
       const options = {
-        quality: '80-90',
+        quality: '70-80',
         speed: '5',
       };
-  
+
       const result = pngquant(inputImageData, options, console.log).data;
-  
+
       const blob = new File([result], file.name, { type: 'image/png' });
       resolve(blob);
     };
 
     reader.onerror = () => reject('Error reading PNG file');
-  
+
     reader.readAsDataURL(file);
   });
 }
