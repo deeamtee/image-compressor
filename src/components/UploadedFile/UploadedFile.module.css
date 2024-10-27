@@ -28,9 +28,17 @@
 }
 
 .title {
-  font-size: 10px;
+  font-size: 12px;
   font-weight: 700;
   line-height: 1.4;
+}
+
+
+.title p {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 164px; 
 }
 
 .button {
@@ -64,13 +72,6 @@
 
 .download:active {
   transform: scale(0.97);
-}
-
-.title p {
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  max-width: 158px; 
 }
 
 .container {

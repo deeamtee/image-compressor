@@ -6,7 +6,7 @@ export const downloadFile = (blob: Blob, fileName: string) => {
   URL.revokeObjectURL(link.href);
 };
 
-export function dataURLtoUint8(dataurl) {
+export function dataURLtoUint8(dataurl: string) {
   const arr = dataurl.split(','),
     bstr = atob(arr[1]);
   let n = bstr.length;

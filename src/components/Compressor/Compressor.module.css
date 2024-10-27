@@ -8,7 +8,7 @@
   box-sizing: border-box;
 
   /* удалить перед деплоем*/
-  max-width: 324px;
+  max-width: 340px;
   margin: auto;
   border: 1px solid #ccc;
 }
@@ -27,8 +27,10 @@
   background-color: #e0f7ff;
 }
 
-.dropAreaText {
-  font-size: 14px;
+.dropAreaContent {
+  display: flex;
+  justify-content: center;
+  font-size: 15px;
   line-height: 1.5;
 }
 
@@ -56,7 +58,7 @@
 }
 
 .title {
-  font-size: 1.5rem;
+  font-size: 24px;
 }
 
 .download {
@@ -71,12 +73,16 @@
   font-size: 12px;
   font-weight: 500;
   cursor: pointer;
-  transition: background-color 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
-
+  transition:
+    background-color 0.3s ease,
+    border-color 0.3s ease,
+    box-shadow 0.3s ease;
 }
 
 .download:hover {
-  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.03), 0 1px 2px rgba(0, 0, 0, 0.03);
+  box-shadow:
+    0 1px 2px rgba(0, 0, 0, 0.03),
+    0 1px 2px rgba(0, 0, 0, 0.03);
   border-color: #71b8fe;
 }
 
@@ -84,7 +90,7 @@
   box-shadow: none;
 }
 .uploadedFiles {
-  max-height: 256px;
+  max-height: 268px;
   overflow: auto;
   scrollbar-width: none;
   scrollbar-color: #8ac5ff #ffffff;
@@ -100,4 +106,45 @@
 
 .uploadedFiles::-webkit-scrollbar-thumb {
   background-color: #8ac5ff; /* Цвет бегунка */
+}
+
+.loader {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  position: relative;
+  animation: rotate 1s linear infinite;
+}
+.loader::before {
+  content: '';
+  box-sizing: border-box;
+  position: absolute;
+  inset: 0px;
+  border-radius: 50%;
+  border: 5px solid #333333;
+  animation: prixClipFix 2s linear infinite;
+}
+
+@keyframes rotate {
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes prixClipFix {
+  0% {
+    clip-path: polygon(50% 50%, 0 0, 0 0, 0 0, 0 0, 0 0);
+  }
+  25% {
+    clip-path: polygon(50% 50%, 0 0, 100% 0, 100% 0, 100% 0, 100% 0);
+  }
+  50% {
+    clip-path: polygon(50% 50%, 0 0, 100% 0, 100% 100%, 100% 100%, 100% 100%);
+  }
+  75% {
+    clip-path: polygon(50% 50%, 0 0, 100% 0, 100% 100%, 0 100%, 0 100%);
+  }
+  100% {
+    clip-path: polygon(50% 50%, 0 0, 100% 0, 100% 100%, 0 100%, 0 0);
+  }
 }

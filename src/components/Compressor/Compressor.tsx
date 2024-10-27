@@ -14,7 +14,8 @@ interface CompressedFile {
 export const Compressor: React.FC = () => {
   const [dragging, setDragging] = useState(false);
   const [compressedFiles, setCompressedFiles] = useState<CompressedFile[]>([]);
-  const [progress, setProgress] = useState<number>(0);
+  // const [progress, setProgress] = useState<number>(0);
+  const [isLoading, setIsLoading] = useState<boolean>(false);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
   const handleDragOver = (e: React.DragEvent) => {
@@ -29,7 +30,8 @@ export const Compressor: React.FC = () => {
   const handleDrop = async (e: React.DragEvent) => {
     e.preventDefault();
     setDragging(false);
-    setProgress(0);
+    setIsLoading(true);
+    // setProgress(0);
     setErrorMessage(null);
     const files = e.dataTransfer.files;
 
@@ -41,7 +43,7 @@ export const Compressor: React.FC = () => {
         if (file.type === 'image/svg+xml') {
           compressedFile = await compressSvg(file);
         } else if (file.type === 'image/jpeg') {
-          compressedFile = await compressJpeg(file, setProgress);
+          compressedFile = await compressJpeg(file, () => {});
         } else if (file.type === 'image/png') {
           compressedFile = await compressPng(file);
         }
@@ -56,6 +58,7 @@ export const Compressor: React.FC = () => {
       (file) => file !== null
     ) as CompressedFile[];
     setCompressedFiles((prev) => filteredCompressedFiles.concat(prev)); // добавить обработку для невалидного файла filteredCompressedFiles);
+    setIsLoading(false);
   };
 
   const handleDownloadAll = async () => {
@@ -80,8 +83,9 @@ export const Compressor: React.FC = () => {
         onDragLeave={handleDragLeave}
         onDrop={handleDrop}
       >
-        <p className={styles.dropAreaText}>
-          Drag and drop an image here <br /> (SVG, JPEG, PNG)
+        <p className={styles.dropAreaContent}>
+          {isLoading ? <div className={styles.loader}/> : <>Drag and drop an image here <br /> (SVG, JPEG, PNG)</>}
+  
         </p>
       </div>
       {/* 

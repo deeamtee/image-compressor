@@ -1,6 +1,6 @@
 import imageCompression from 'browser-image-compression';
 import { optimize } from 'svgo';
-import { pngquant } from '../../utils/pngquant';
+import pngquant from '../../utils/pngquant';
 import { dataURLtoUint8 } from '../../utils/helpers';
 
 export function compressPng(file: File) {
