@@ -4,13 +4,37 @@ import cn from 'clsx';
 import { Icon } from '../Icon';
 import { getExtensionFromMimeType } from './UploadedFile.helpers';
 import { downloadFile } from '../../utils/helpers';
+import fallbackImage from './resources/fallback.jpg';
 
 type Props = {
   compressedFile: File;
   originalFile: File;
 };
 
+const FallbackFile = ({ originalFile }: { originalFile: File }) => {
+  return (
+    <div className={styles.container}>
+      <div className={styles.file}>
+        <img className={styles.image} src={fallbackImage} alt={`Fallback image for ${originalFile.name}`} />
+        <div className={styles.wrapper}>
+          <div className={styles.info}>
+            <div className={cn(styles.flex, styles.title)}>
+              <p className={cn(styles.name, styles.name_error)}>{originalFile.name}</p>
+            </div>
+            <div className={cn(styles.flex, styles.sizes)}>
+              <p className={styles.error}>Invalid</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+};
+
 export const UploadedFile: FC<Props> = ({ compressedFile, originalFile }) => {
+  if (!compressedFile) {
+    return <FallbackFile originalFile={originalFile} />;
+  }
   const { name, type } = compressedFile;
   const image = URL.createObjectURL(compressedFile);
 
@@ -24,21 +48,20 @@ export const UploadedFile: FC<Props> = ({ compressedFile, originalFile }) => {
       const extension = getExtensionFromMimeType(type);
       const defaultFileName = `compressed.${extension}`;
       const fileName = compressedFile.name || defaultFileName;
-      
-      downloadFile(blob, fileName); // Используем общую функцию для скачивания
+
+      downloadFile(blob, fileName);
     }
   };
-  
 
   return (
     <div className={styles.container}>
-    <div className={styles.file}>
+      <div className={styles.file}>
         <img className={styles.image} src={image} alt={name} />
         <div className={styles.wrapper}>
           <div className={styles.info}>
             <div className={cn(styles.flex, styles.title)}>
-              <p>{name}</p>
-              <p>–{compressionRate}%</p>
+              <p className={styles.name}>{name}</p>
+              <p className={styles.rate}>–{compressionRate}%</p>
             </div>
             <div className={cn(styles.flex, styles.sizes)}>
               <p>{originalSize} KB</p>

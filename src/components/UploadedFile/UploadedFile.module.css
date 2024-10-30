@@ -19,6 +19,7 @@
 
 .file {
   display: flex;
+  align-items: center;
 }
 
 .info {
@@ -33,12 +34,14 @@
   line-height: 1.4;
 }
 
-
-.title p {
+.name {
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
-  max-width: 164px; 
+  max-width: 162px;
+  &_error {
+    max-width: 180px;
+  }
 }
 
 .button {
@@ -75,5 +78,13 @@
 }
 
 .container {
-  margin-bottom: 12px; 
+  margin-bottom: 12px;
+}
+
+.error {
+  color: #ff0000;
+}
+
+.rate {
+  width: max-content;
 }
