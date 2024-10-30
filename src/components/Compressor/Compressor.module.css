@@ -8,9 +8,9 @@
   box-sizing: border-box;
 
   /* удалить перед деплоем*/
-  max-width: 340px;
+  /* max-width: 340px;
   margin: auto;
-  border: 1px solid #ccc;
+  border: 1px solid #ccc; */
 }
 
 .dropArea {
