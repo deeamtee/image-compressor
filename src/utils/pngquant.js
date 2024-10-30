@@ -74935,6 +74935,3 @@ run();
 		"data": file
 	};
 }
-
-// pngquant.call(this);
-

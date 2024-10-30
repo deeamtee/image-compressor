@@ -48,16 +48,16 @@ export const Compressor: React.FC = () => {
           compressedFile = await compressPng(file);
         }
         return compressedFile ? { originalFile: file, compressedFile } : null;
-      } catch {
+      } catch (error) {
         return null; // обработка невалидного файла
       }
     });
 
-    const compressedFiles = await Promise.all(compressedFilePromises).catch(() => []); // добавить обработку для невалидного файла
+    const compressedFiles = await Promise.all(compressedFilePromises.filter(Boolean)); // добавить обработку для невалидного файла
     const filteredCompressedFiles = compressedFiles.filter(
       (file) => file !== null
     ) as CompressedFile[];
-    setCompressedFiles((prev) => filteredCompressedFiles.concat(prev)); // добавить обработку для невалидного файла filteredCompressedFiles);
+    setCompressedFiles((prev) => filteredCompressedFiles.concat(prev));
     setIsLoading(false);
   };
 
@@ -83,10 +83,10 @@ export const Compressor: React.FC = () => {
         onDragLeave={handleDragLeave}
         onDrop={handleDrop}
       >
-        <p className={styles.dropAreaContent}>
-          {isLoading ? <div className={styles.loader}/> : <>Drag and drop an image here <br /> (SVG, JPEG, PNG)</>}
+        <div className={styles.dropAreaContent}>
+          {isLoading ? <div className={styles.loader}/> : <p>Drag and drop an image here <br /> (SVG, JPEG, PNG)</p>}
   
-        </p>
+        </div>
       </div>
       {/* 
       {progress > 0 && !errorMessage && (
