@@ -3,8 +3,9 @@ import { optimize } from 'svgo';
 import { dataURLtoUint8 } from '../../utils/helpers';
 import Worker from './worker?worker';
 import { ERRORS } from '../../utils/constants';
+import { OutputFiles } from './CompressedFile.types';
 
-export function compressPng(file: File) {
+function compressPng(file: File) {
   const reader = new FileReader();
 
   return new Promise<File | null>((resolve, reject) => {
@@ -40,7 +41,7 @@ export function compressPng(file: File) {
   });
 }
 
-export const compressJpeg = async (file: File, onProgress: (p: number) => void) => {
+const compressJpeg = async (file: File, onProgress: (p: number) => void) => {
   const options = {
     useWebWorker: true,
     initialQuality: 0.75,
@@ -52,7 +53,7 @@ export const compressJpeg = async (file: File, onProgress: (p: number) => void) 
   return imageCompression(file, options);
 };
 
-export const compressSvg = async (file: File) => {
+const compressSvg = async (file: File) => {
   const reader = new FileReader();
 
   return new Promise<File | null>((resolve, reject) => {
@@ -79,4 +80,21 @@ export const compressSvg = async (file: File) => {
 
     reader.readAsText(file);
   });
+};
+
+
+export const compressFile = async (file: File): Promise<OutputFiles> => {
+  try {
+    let compressedFile: File | null = null;
+    if (file.type === 'image/svg+xml') {
+      compressedFile = await compressSvg(file);
+    } else if (file.type === 'image/jpeg') {
+      compressedFile = await compressJpeg(file, () => {});
+    } else if (file.type === 'image/png') {
+      compressedFile = await compressPng(file);
+    }
+    return { originalFile: file, compressedFile };
+  } catch {
+    return { originalFile: file, compressedFile: null };
+  }
 };

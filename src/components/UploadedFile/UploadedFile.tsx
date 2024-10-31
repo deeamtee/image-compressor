@@ -5,11 +5,9 @@ import { Icon } from '../Icon';
 import { getExtensionFromMimeType } from './UploadedFile.helpers';
 import { downloadFile } from '../../utils/helpers';
 import fallbackImage from './resources/fallback.jpg';
+import { OutputFiles } from '../Compressor/CompressedFile.types';
 
-type Props = {
-  compressedFile: File;
-  originalFile: File;
-};
+type Props = OutputFiles;
 
 const FallbackFile = ({ originalFile }: { originalFile: File }) => {
   return (

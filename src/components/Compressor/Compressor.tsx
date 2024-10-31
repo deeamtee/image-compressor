@@ -2,18 +2,14 @@ import React, { useState } from 'react';
 import JSZip from 'jszip';
 import styles from './Compressor.module.css';
 import cn from 'clsx';
-import { compressJpeg, compressPng, compressSvg } from './Compressor.helpers';
+import { compressFile } from './Compressor.helpers';
 import { UploadedFile } from '../UploadedFile';
 import { downloadFile } from '../../utils/helpers';
-
-interface CompressedFile {
-  originalFile: File;
-  compressedFile: File;
-}
+import { OutputFiles } from './CompressedFile.types';
 
 export const Compressor: React.FC = () => {
   const [dragging, setDragging] = useState(false);
-  const [compressedFiles, setCompressedFiles] = useState<CompressedFile[]>([]);
+  const [compressedFiles, setCompressedFiles] = useState<OutputFiles[]>([]);
   // const [progress, setProgress] = useState<number>(0);
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
@@ -37,24 +33,10 @@ export const Compressor: React.FC = () => {
 
     if (files.length === 0) return;
 
-    const compressedFilePromises = Array.from(files).map(async (file) => {
-      try {
-        let compressedFile: File | null = null;
-        if (file.type === 'image/svg+xml') {
-          compressedFile = await compressSvg(file);
-        } else if (file.type === 'image/jpeg') {
-          compressedFile = await compressJpeg(file, () => {});
-        } else if (file.type === 'image/png') {
-          compressedFile = await compressPng(file);
-        }
-        return Promise.resolve({ originalFile: file, compressedFile });
-      } catch {
-        return Promise.resolve({ originalFile: file, compressedFile: null });
-      }
-    });
+    const compressedFilePromises = Array.from(files).map(compressFile);
 
     const compressedFiles = await Promise.all(compressedFilePromises); 
-    const filteredCompressedFiles = compressedFiles.filter((file) => !!file) as CompressedFile[];
+    const filteredCompressedFiles = compressedFiles.filter((file) => !!file) as OutputFiles[];
     setCompressedFiles((prev) => filteredCompressedFiles.concat(prev));
     setIsLoading(false);
   };
@@ -63,6 +45,7 @@ export const Compressor: React.FC = () => {
     const zip = new JSZip();
 
     compressedFiles.forEach(({ compressedFile }) => {
+      if (!compressedFile) return;
       zip.file(compressedFile.name, compressedFile);
     });
 
