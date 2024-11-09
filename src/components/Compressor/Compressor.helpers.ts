@@ -82,6 +82,17 @@ const compressSvg = async (file: File) => {
   });
 };
 
+const compressWebp = async (file: File) => {
+  const options = {
+    maxSizeMB: 1,
+    maxWidthOrHeight: 1920,
+    useWebWorker: true,
+    fileType: file.type,
+    alwaysKeepResolution: true,
+  };
+
+  return imageCompression(file, options);
+};
 
 export const compressFile = async (file: File): Promise<OutputFiles> => {
   try {
@@ -92,6 +103,8 @@ export const compressFile = async (file: File): Promise<OutputFiles> => {
       compressedFile = await compressJpeg(file, () => {});
     } else if (file.type === 'image/png') {
       compressedFile = await compressPng(file);
+    } else if (file.type === 'image/webp') {
+      compressedFile = await compressWebp(file);
     }
     return { originalFile: file, compressedFile };
   } catch {
