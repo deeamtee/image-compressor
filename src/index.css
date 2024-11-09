@@ -1,5 +1,6 @@
 @import url("./vendor/normalize.css");
 @import url("./vendor/reset.css");
+@import url("./vendor/variables.css");
 
 :root {
   font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
