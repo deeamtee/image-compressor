@@ -6,8 +6,11 @@ import { compressFile } from './Compressor.helpers';
 import { UploadedFile } from '../UploadedFile';
 import { downloadFile } from '../../utils/helpers';
 import { OutputFiles } from './CompressedFile.types';
+import { useTranslation } from 'react-i18next';
 
 export const Compressor: React.FC = () => {
+  const { t } = useTranslation();
+
   const [dragging, setDragging] = useState(false);
   const [compressedFiles, setCompressedFiles] = useState<OutputFiles[]>([]);
   // const [progress, setProgress] = useState<number>(0);
@@ -57,7 +60,7 @@ export const Compressor: React.FC = () => {
 
   return (
     <div className={styles.container}>
-      <h1 className={styles.title}>Images Compressor</h1>
+      <h1 className={styles.title}>{t('title')}</h1>
       <div
         className={cn(styles.dropArea, { [styles.dragging]: dragging })}
         onDragOver={handleDragOver}
@@ -69,7 +72,7 @@ export const Compressor: React.FC = () => {
             <div className={styles.loader} />
           ) : (
             <p>
-              Drag and drop an image here <br /> (SVG, JPEG, PNG)
+              {t('text')} <br /> (SVG, JPEG, PNG)
             </p>
           )}
         </div>
@@ -89,7 +92,7 @@ export const Compressor: React.FC = () => {
       {compressedFiles.length > 0 && (
         <div>
           <button className={styles.download} onClick={handleDownloadAll}>
-            Download ZIP
+            {t('download')} ZIP
           </button>
         </div>
       )}
