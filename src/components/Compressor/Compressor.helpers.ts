@@ -93,8 +93,6 @@ const compressWebp = async (file: File) => {
 };
 
 export const compressFile = async (file: File): Promise<OutputFiles> => {
-  console.log(file.type);
-  
   try {
     let compressedFile: File | null = null;
     if (file.type === 'image/svg+xml') {
