@@ -3,88 +3,20 @@
     --color-white: #fff;
     --color-black: #000;
 
-    --color-gray-100: #f2f2f2;
-    --color-gray-200: #e5e5e5;
-    --color-gray-300: #d9d9d9;
-    --color-gray-400: #ccc;
-    --color-gray-500: #b3b3b3;
-    --color-gray-600: #999;
-    --color-gray-700: #808080;
-    --color-gray-800: #666;
-    --color-gray-900: #333;
+    --color-blue-500: #0070f3;
+    --color-yellow-500: #ffc600;
+    --color-red-500: #ff0000;
 
-    --color-red-100: #ffe0e0;
-    --color-red-200: #ffc0c0;
-    --color-red-300: #ffa0a0;
-    --color-red-400: #ff8080;
-    --color-red-500: #ff6060;
-    --color-red-600: #ff4040;
-    --color-red-700: #ff2020;
-    --color-red-800: #ff0000;
-    --color-red-900: #cc0000;
-
-    --color-green-100: #e0ffe0;
-    --color-green-200: #c0ffc0;
-    --color-green-300: #a0ffa0;
-    --color-green-400: #80ff80;
-    --color-green-500: #60ff60;
-    --color-green-600: #40ff40;
-    --color-green-700: #20ff20;
-    --color-green-800: #00ff00;
-    --color-green-900: #00cc00;
-
-    --color-blue-100: #e0e0ff;
-    --color-blue-200: #c0c0ff;
-    --color-blue-300: #a0a0ff;
-    --color-blue-400: #8080ff;
-    --color-blue-500: #6060ff;
-    --color-blue-600: #4040ff;
-    --color-blue-700: #2020ff;
-    --color-blue-800: #0000ff;
-    --color-blue-900: #0000cc;
-
-    --color-yellow-100: #ffffe0;
-    --color-yellow-200: #ffffc0;
-    --color-yellow-300: #ffffa0;
-    --color-yellow-400: #ffff80;
-    --color-yellow-500: #ffff60;
-    --color-yellow-600: #ffff40;
-    --color-yellow-700: #ffff20;
-    --color-yellow-800: #ffff00;
-    --color-yellow-900: #cccc00;
-
-    --color-purple-100: #e0e0ff;
-    --color-purple-200: #c0c0ff;
-    --color-purple-300: #a0a0ff;
-    --color-purple-400: #8080ff;
-    --color-purple-500: #6060ff;
-    --color-purple-600: #4040ff;
-    --color-purple-700: #2020ff;
-    --color-purple-800: #0000ff;
-    --color-purple-900: #0000cc;
-
-    --color-cyan-100: #e0ffff;
-    --color-cyan-200: #c0ffff;
-    --color-cyan-300: #a0ffff;
-    --color-cyan-400: #80ffff;
-    --color-cyan-500: #60ffff;
-    --color-cyan-600: #40ffff;
-    --color-cyan-700: #20ffff;
-    --color-cyan-800: #00ffff;
-    --color-cyan-900: #00cccc;
-    
     --color-primary: var(--color-blue-500);
     --color-secondary: var(--color-yellow-500);
     --color-tertiary: var(--color-red-500);
-    --color-quaternary: var(--color-green-500);
-    --color-quinary: var(--color-purple-500);
-    --color-senary: var(--color-cyan-500);
- 
+
     /* Размерную сетку задать после получения дизайна */
     --spacing-4: 4px;
     --spacing-8: 8px;
     --spacing-12: 12px;
     --spacing-16: 16px;
+    --spacing-20: 20px;
     --spacing-24: 24px;
     --spacing-32: 32px;
     --spacing-48: 48px;
@@ -102,7 +34,4 @@
     --color-primary: var(--color-blue-500);
     --color-secondary: var(--color-yellow-500);
     --color-tertiary: var(--color-red-500);
-    --color-quaternary: var(--color-green-500);
-    --color-quinary: var(--color-purple-500);
-    --color-senary: var(--color-cyan-500);
 }
