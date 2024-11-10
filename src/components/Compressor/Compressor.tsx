@@ -72,7 +72,7 @@ export const Compressor: React.FC = () => {
             <div className={styles.loader} />
           ) : (
             <p>
-              {t('text')} <br /> (SVG, JPEG, PNG)
+              {t('dragndrop')} <br /> (SVG, JPEG, PNG)
             </p>
           )}
         </div>

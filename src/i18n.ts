@@ -6,14 +6,14 @@ const resources = {
   en: {
     translation: {
       title: 'Images Compressor',
-      text: 'Drag and drop an image here',
+      dragndrop: 'Drag and drop an image here',
       download: 'Download'
     },
   },
   ru: {
     translation: {
       title: 'Сжатие картинок',
-      text: 'Перетащите изображение сюда',
+      dragndrop: 'Перетащите изображение сюда',
       download: 'Скачать'
     },
   },
