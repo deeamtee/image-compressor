@@ -1,37 +1,38 @@
 :root {
-    /* Примерная структура цветовой палитры */
-    --color-white: #fff;
-    --color-black: #000;
+  /* Цветовая палитра */
+  --color-primary: #00a3f4;
+  --color-dark: #0d1415;
+  --color-white: #ffffff;
 
-    --color-blue-500: #0070f3;
-    --color-yellow-500: #ffc600;
-    --color-red-500: #ff0000;
+  --color-primary-20: rgba(0, 163, 244, 0.2);
+  --color-primary-35: rgba(0, 163, 244, 0.35);
+  --color-primary-50: rgba(0, 163, 244, 0.5);
 
-    --color-primary: var(--color-blue-500);
-    --color-secondary: var(--color-yellow-500);
-    --color-tertiary: var(--color-red-500);
+  --color-dark-20: rgba(13, 20, 21, 0.2);
+  --color-dark-35: rgba(13, 20, 21, 0.35);
+  --color-dark-50: rgba(13, 20, 21, 0.5);
 
-    /* Размерную сетку задать после получения дизайна */
-    --spacing-4: 4px;
-    --spacing-8: 8px;
-    --spacing-12: 12px;
-    --spacing-16: 16px;
-    --spacing-20: 20px;
-    --spacing-24: 24px;
-    --spacing-32: 32px;
-    --spacing-48: 48px;
-    --spacing-64: 64px;
+  /* Отступы */
+  --spacing-4: 4px;
+  --spacing-8: 8px;
+  --spacing-12: 12px;
+  --spacing-16: 16px;
+  --spacing-20: 20px;
+  --spacing-24: 24px;
+  --spacing-32: 32px;
+  --spacing-48: 48px;
+  --spacing-64: 64px;
 
-    --font-size-xs: 12px;
-    --font-size-s: 14px;
-    --font-size-m: 16px;
-    --font-size-l: 18px;
-    --font-size-xl: 20px;
-    --font-size-xxl: 24px;
+  /* Размеры шрифтов */
+  --font-size-s: 10px;
+  --font-size-m: 12px;
+  --font-size-l: 14px;
+  --font-size-xl: 21px;
 }
 
+/* Темная тема */
 .dark-theme {
-    --color-primary: var(--color-blue-500);
-    --color-secondary: var(--color-yellow-500);
-    --color-tertiary: var(--color-red-500);
+  --color-primary: #0d1415;
+  --color-dark: #00a3f4;
+  --color-white: #ffffff;
 }

@@ -1,0 +1,36 @@
+.typography {
+  font-family: 'Montserrat', sans-serif;
+  color: var(--color-primary);
+}
+
+.size-s {
+  font-size: var(--font-size-s);
+  line-height: 12px;
+}
+
+.size-m {
+  font-size: var(--font-size-m);
+  line-height: 14px;
+}
+
+.size-l {
+  font-size: var(--font-size-l);
+  line-height: 18px;
+}
+
+.size-xl {
+  font-size: var(--font-size-xl);
+  line-height: 28px;
+}
+
+.weight-regular {
+  font-weight: 400;
+}
+
+.weight-semibold {
+  font-weight: 600;
+}
+
+.weight-bold {
+  font-weight: 700;
+}
