@@ -1,16 +1,20 @@
 :root {
   /* Цветовая палитра */
-  --color-primary: #00a3f4;
-  --color-dark: #0d1415;
   --color-white: #ffffff;
 
-  --color-primary-20: rgba(0, 163, 244, 0.2);
-  --color-primary-35: rgba(0, 163, 244, 0.35);
-  --color-primary-50: rgba(0, 163, 244, 0.5);
+  --color-gray: #e2e2e2;
+  --color-gray-50: #e7e8e8;
 
-  --color-dark-20: rgba(13, 20, 21, 0.2);
-  --color-dark-35: rgba(13, 20, 21, 0.35);
+  --color-primary: #00a3f4;
+  --color-primary-50: rgba(0, 163, 244, 0.5);
+  --color-primary-35: rgba(0, 163, 244, 0.35);
+  --color-primary-20: rgba(0, 163, 244, 0.2);
+
+  --color-dark: #0d1415;
   --color-dark-50: rgba(13, 20, 21, 0.5);
+  --color-dark-35: rgba(13, 20, 21, 0.35);
+  --color-dark-20: rgba(13, 20, 21, 0.2);
+  --color-dark-10: rgba(13, 20, 21, 0.1);
 
   /* Отступы */
   --spacing-4: 4px;
@@ -28,6 +32,8 @@
   --font-size-m: 12px;
   --font-size-l: 14px;
   --font-size-xl: 21px;
+
+  --font-family: 'Montserrat', system-ui, Arial, sans-serif;
 }
 
 /* Темная тема */

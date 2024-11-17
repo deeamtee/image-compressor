@@ -9,6 +9,8 @@ import { OutputFiles } from './CompressedFile.types';
 import { Trans, useTranslation } from 'react-i18next';
 import { Typography } from '../Typography';
 import { CountrySelect } from '../../CountrySelect';
+import { Button } from '../Button';
+import { Icon } from '../Icon';
 
 const Title = () => (
   <Typography as="h1">
@@ -83,22 +85,19 @@ export const Compressor: React.FC = () => {
         onDragLeave={handleDragLeave}
         onDrop={handleDrop}
       >
-        <div className={styles.dropAreaContent}>
+        <div>
           {isLoading ? (
             <div className={styles.loader} />
           ) : (
-            <p>
-              {t('dragndrop')} <br /> (SVG, JPEG, PNG)
-            </p>
+            <div className={styles.dragndrop}>
+              <Icon variant="picture" />
+              <Typography className={styles.dragndropText} size="m" weight="semibold" color="primary">
+                {t('dragndrop')} <br /> (SVG, JPEG, PNG)
+              </Typography>
+            </div>
           )}
         </div>
       </div>
-      {/* 
-      {progress > 0 && !errorMessage && (
-        <div className={styles.progress}>
-          <div className={styles.progressBar} style={{ width: `${progress}%` }}></div>
-        </div>
-      )} */}
       <div className={styles.uploadedFiles}>
         {compressedFiles.map(({ originalFile, compressedFile }, index) => (
           <UploadedFile key={index} originalFile={originalFile} compressedFile={compressedFile} />
@@ -107,9 +106,9 @@ export const Compressor: React.FC = () => {
 
       {compressedFiles.length > 0 && (
         <div>
-          <button className={styles.download} onClick={handleDownloadAll}>
+          <Button className={styles.downloadButton} variant="accent" onClick={handleDownloadAll}>
             {t('download')} ZIP
-          </button>
+          </Button>
         </div>
       )}
       {errorMessage && <p className={styles.error}>{errorMessage}</p>}
