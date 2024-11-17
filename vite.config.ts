@@ -5,11 +5,7 @@ import svgr from '@svgr/rollup';
 import { nodePolyfills } from 'vite-plugin-node-polyfills';
 
 export default defineConfig({
-  plugins: [
-    react(),
-    svgr(),
-    nodePolyfills()
-  ],
+  plugins: [react(), svgr(), nodePolyfills()],
   build: {
     rollupOptions: {
       input: {
@@ -17,8 +13,8 @@ export default defineConfig({
         content: resolve(__dirname, 'src/main.tsx'),
       },
       output: {
-        entryFileNames: 'assets/[name]-[hash].js', 
-        chunkFileNames: 'assets/[name]-[hash].js', 
+        entryFileNames: 'assets/[name]-[hash].js',
+        chunkFileNames: 'assets/[name]-[hash].js',
         assetFileNames: 'assets/[name]-[hash].[ext]',
       },
     },

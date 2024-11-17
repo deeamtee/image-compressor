@@ -1,4 +1,4 @@
 export interface OutputFiles {
-    originalFile: File;
-    compressedFile: File | null;
-  }
+  originalFile: File;
+  compressedFile: File | null;
+}
