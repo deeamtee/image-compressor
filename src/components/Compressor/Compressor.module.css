@@ -2,7 +2,7 @@
   display: flex;
   flex-direction: column;
   justify-content: center;
-  padding: 24px;
+  padding: var(--spacing-20) var(--spacing-16);
   background: var(--color-white);
   box-sizing: border-box;
 }
@@ -16,22 +16,15 @@
 .dropArea {
   box-sizing: border-box;
   width: 100%;
-  border: 2px dashed #ccc;
+  border: 1.5px dashed var(--color-gray);
   padding: 16px;
-  margin: 24px auto;
+  margin: var(--spacing-12) auto;
   border-radius: 8px;
 }
 
 .dropArea.dragging {
-  border-color: #00aaff;
-  background-color: #e0f7ff;
-}
-
-.dropAreaContent {
-  display: flex;
-  justify-content: center;
-  font-size: 15px;
-  line-height: 1.5;
+  border-color: var(--color-primary);
+  background-color: var(--color-primary-20);
 }
 
 .progress {
@@ -57,40 +50,12 @@
   margin-bottom: 16px;
 }
 
-.title {
-  font-size: 24px;
-}
-
-.download {
-  margin-top: 8px;
-  padding: 6px 0;
+.downloadButton {
   width: 100%;
-  box-sizing: border-box;
-  color: #333;
-  border-radius: 4px;
-  border: 1px solid #8ac5ff;
-  background: #ffffff;
-  font-size: 12px;
-  font-weight: 500;
-  cursor: pointer;
-  transition:
-    background-color 0.3s ease,
-    border-color 0.3s ease,
-    box-shadow 0.3s ease;
 }
 
-.download:hover {
-  box-shadow:
-    0 1px 2px rgba(0, 0, 0, 0.03),
-    0 1px 2px rgba(0, 0, 0, 0.03);
-  border-color: #71b8fe;
-}
-
-.download:active {
-  box-shadow: none;
-}
 .uploadedFiles {
-  max-height: 268px;
+  max-height: 1080px;
   overflow: auto;
   scrollbar-width: none;
   scrollbar-color: #8ac5ff #ffffff;
@@ -147,4 +112,14 @@
   100% {
     clip-path: polygon(50% 50%, 0 0, 100% 0, 100% 100%, 0 100%, 0 0);
   }
+}
+
+.dragndrop {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--spacing-8);
+}
+.dragndropText {
+  text-align: center;
 }

@@ -3,7 +3,7 @@
 @import url('./vendor/variables.css');
 
 :root {
-  font-family: Montserrat, system-ui, Inter, Helvetica, Arial, sans-serif;
+  font-family: var(--font-family);
   line-height: 1.5;
   font-weight: 400;
 

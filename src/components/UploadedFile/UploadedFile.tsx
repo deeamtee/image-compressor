@@ -6,25 +6,32 @@ import { getExtensionFromMimeType } from './UploadedFile.helpers';
 import { downloadFile } from '../../utils/helpers';
 import fallbackImage from './resources/fallback.jpg';
 import { OutputFiles } from '../Compressor/CompressedFile.types';
+import { Typography } from '../Typography';
 
 type Props = OutputFiles;
 
 const FallbackFile = ({ originalFile }: { originalFile: File }) => {
+  const { name } = originalFile;
   return (
     <div className={styles.container}>
       <div className={styles.file}>
         <img className={styles.image} src={fallbackImage} alt={`Fallback image for ${originalFile.name}`} />
         <div className={styles.wrapper}>
           <div className={styles.info}>
-            <div className={cn(styles.flex, styles.title)}>
-              <p className={cn(styles.name, styles.name_error)}>{originalFile.name}</p>
+            <div className={styles.flex}>
+              <Typography className={cn(styles.name, styles.name_error)} size="m" weight="semibold">
+                {name}
+              </Typography>
             </div>
             <div className={cn(styles.flex, styles.sizes)}>
-              <p className={styles.error}>Invalid</p>
+              <Typography className={styles.error} size="s" weight="normal">
+                Invalid
+              </Typography>
             </div>
           </div>
         </div>
       </div>
+      <div className={styles.progress} style={{ width: `${100}%` }}></div>
     </div>
   );
 };
@@ -57,21 +64,29 @@ export const UploadedFile: FC<Props> = ({ compressedFile, originalFile }) => {
         <img className={styles.image} src={image} alt={name} />
         <div className={styles.wrapper}>
           <div className={styles.info}>
-            <div className={cn(styles.flex, styles.title)}>
-              <p className={styles.name}>{name}</p>
-              <p className={styles.rate}>–{compressionRate}%</p>
+            <div className={styles.flex}>
+              <Typography className={styles.name} size="m" weight="semibold">
+                {name}
+              </Typography>
+              <Typography size="m" weight="semibold" className={styles.rate}>
+                –{compressionRate}%
+              </Typography>
             </div>
-            <div className={cn(styles.flex, styles.sizes)}>
-              <p>{originalSize} KB</p>
-              <p>{compressedSize} KB</p>
+            <div className={styles.flex}>
+              <Typography size="s" weight="normal">
+                {originalSize} KB
+              </Typography>
+              <Typography size="s" weight="normal">
+                {compressedSize} KB
+              </Typography>
             </div>
           </div>
           <button className={styles.download} onClick={handleDownload}>
-            <Icon variant="download" />
+            <Icon variant="download" color="var(--color-primary)" />
           </button>
         </div>
       </div>
-      {/* <div style={{ width: `${progress}%` }}></div> */}
+      <div className={styles.progress} style={{ width: `${100}%` }}></div>
     </div>
   );
 };

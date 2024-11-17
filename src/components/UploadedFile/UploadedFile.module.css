@@ -2,14 +2,13 @@
   width: 32px;
   height: 32px;
   object-fit: cover;
+  border-radius: 5px;
   margin-right: 8px;
 }
 
 .wrapper {
   display: flex;
-  /* align-items: center; */
   width: 100%;
-  height: 100%;
 }
 
 .flex {
@@ -19,19 +18,13 @@
 
 .file {
   display: flex;
-  align-items: center;
 }
 
 .info {
   display: flex;
   flex-direction: column;
+  justify-content: space-between;
   width: 100%;
-}
-
-.title {
-  font-size: 12px;
-  font-weight: 700;
-  line-height: 1.4;
 }
 
 .name {
@@ -45,10 +38,6 @@
   max-width: 180px;
 }
 
-.button {
-  padding: 4px;
-}
-
 .sizes {
   font-size: 10px;
   font-weight: 400;
@@ -58,9 +47,6 @@
 
 .download {
   padding: 0;
-  display: flex;
-  justify-content: center;
-  align-items: self-start;
   border: none;
   margin-left: 12px;
   background: transparent;
@@ -79,7 +65,7 @@
 }
 
 .container {
-  margin-bottom: 12px;
+  padding-top: var(--spacing-12);
 }
 
 .error {
@@ -88,4 +74,11 @@
 
 .rate {
   width: max-content;
+}
+
+.progress {
+  height: 1.5px;
+  background-color: var(--color-dark-10);
+  width: 100%;
+  margin-top: var(--spacing-12);
 }

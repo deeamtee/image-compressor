@@ -5,7 +5,7 @@ import styles from './Typography.module.css';
 type TypographyProps = {
   size?: 's' | 'm' | 'l' | 'xl';
   color?: 'primary' | 'dark' | string;
-  weight?: 'regular' | 'semibold' | 'bold';
+  weight?: 'normal' | 'semibold' | 'bold';
   as?: keyof JSX.IntrinsicElements;
   className?: string;
   children?: React.ReactNode;
