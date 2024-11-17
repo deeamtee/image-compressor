@@ -25,6 +25,7 @@ export default tseslint.config(
       'prettier/prettier': ['error', {}, { usePrettierrc: true }],
       semi: ['warn', 'always'],
       'no-console': ['warn', { allow: ['warn', 'error'] }],
+      'linebreak-style': ['error', 'windows'],
     },
   }
 );
