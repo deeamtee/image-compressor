@@ -1,10 +1,15 @@
 .container {
   display: flex;
   flex-direction: column;
-  justify-content: center;
-  padding: var(--spacing-20) var(--spacing-16);
+  justify-content: space-between;
+  padding-top: var(--spacing-20);
   background: var(--color-white);
   box-sizing: border-box;
+  height: 100vh;
+}
+
+.narrow {
+  padding: 0 var(--spacing-16);
 }
 
 .header {
@@ -25,6 +30,13 @@
 .dropArea.dragging {
   border-color: var(--color-primary);
   background-color: var(--color-primary-20);
+}
+
+.content {
+  display: flex;
+  justify-content: center;
+  font-size: 15px;
+  line-height: 1.5;
 }
 
 .progress {
@@ -52,6 +64,7 @@
 
 .downloadButton {
   width: 100%;
+  border-radius: 0px;
 }
 
 .uploadedFiles {

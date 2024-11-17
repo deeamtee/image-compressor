@@ -1,16 +1,14 @@
 import React, { useState } from 'react';
 import JSZip from 'jszip';
-import styles from './Compressor.module.css';
 import cn from 'clsx';
 import { compressFile } from './Compressor.helpers';
 import { UploadedFile } from '../UploadedFile';
 import { downloadFile } from '../../utils/helpers';
 import { OutputFiles } from './CompressedFile.types';
 import { Trans, useTranslation } from 'react-i18next';
-import { Typography } from '../Typography';
-import { CountrySelect } from '../../CountrySelect';
-import { Button } from '../Button';
-import { Icon } from '../Icon';
+import { Typography, Icon, Button } from 'ui';
+import { CountrySelect } from '../CountrySelect/CountrySelect';
+import styles from './Compressor.module.css';
 
 const Title = () => (
   <Typography as="h1">
@@ -30,7 +28,6 @@ export const Compressor: React.FC = () => {
   const [compressedFiles, setCompressedFiles] = useState<OutputFiles[]>([]);
   // const [progress, setProgress] = useState<number>(0);
   const [isLoading, setIsLoading] = useState<boolean>(false);
-  const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
   const handleDragOver = (e: React.DragEvent) => {
     e.preventDefault();
@@ -46,7 +43,6 @@ export const Compressor: React.FC = () => {
     setDragging(false);
     setIsLoading(true);
     // setProgress(0);
-    setErrorMessage(null);
     const files = e.dataTransfer.files;
 
     if (files.length === 0) return;
@@ -75,43 +71,41 @@ export const Compressor: React.FC = () => {
 
   return (
     <div className={styles.container}>
-      <div className={styles.header}>
-        <Title />
-        <CountrySelect />
-      </div>
-      <div
-        className={cn(styles.dropArea, { [styles.dragging]: dragging })}
-        onDragOver={handleDragOver}
-        onDragLeave={handleDragLeave}
-        onDrop={handleDrop}
-      >
-        <div>
-          {isLoading ? (
-            <div className={styles.loader} />
-          ) : (
-            <div className={styles.dragndrop}>
-              <Icon variant="picture" />
-              <Typography className={styles.dragndropText} size="m" weight="semibold" color="primary">
-                {t('dragndrop')} <br /> (SVG, JPEG, PNG)
-              </Typography>
-            </div>
-          )}
+      <div className={styles.narrow}>
+        <div className={styles.header}>
+          <Title />
+          <CountrySelect />
+        </div>
+        <div
+          className={cn(styles.dropArea, { [styles.dragging]: dragging })}
+          onDragOver={handleDragOver}
+          onDragLeave={handleDragLeave}
+          onDrop={handleDrop}
+        >
+          <div className={styles.content}>
+            {isLoading ? (
+              <div className={styles.loader} />
+            ) : (
+              <div className={styles.dragndrop}>
+                <Icon variant="picture" />
+                <Typography className={styles.dragndropText} size="m" weight="semibold" color="primary">
+                  {t('dragndrop')} <br /> (SVG, JPEG, PNG)
+                </Typography>
+              </div>
+            )}
+          </div>
+        </div>
+        <div className={styles.uploadedFiles}>
+          {compressedFiles.map(({ originalFile, compressedFile }, index) => (
+            <UploadedFile key={index} originalFile={originalFile} compressedFile={compressedFile} />
+          ))}
         </div>
       </div>
-      <div className={styles.uploadedFiles}>
-        {compressedFiles.map(({ originalFile, compressedFile }, index) => (
-          <UploadedFile key={index} originalFile={originalFile} compressedFile={compressedFile} />
-        ))}
-      </div>
-
       {compressedFiles.length > 0 && (
-        <div>
-          <Button className={styles.downloadButton} variant="accent" onClick={handleDownloadAll}>
-            {t('download')} ZIP
-          </Button>
-        </div>
+        <Button className={styles.downloadButton} variant="accent" onClick={handleDownloadAll}>
+          {t('download')} ZIP
+        </Button>
       )}
-      {errorMessage && <p className={styles.error}>{errorMessage}</p>}
     </div>
   );
 };
