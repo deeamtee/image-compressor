@@ -4,7 +4,7 @@
   justify-content: center;
   text-align: center;
   padding: 24px;
-  background: linear-gradient(#e5fbff, #ffffff);
+  background: var(--color-white);
   box-sizing: border-box;
 }
 
