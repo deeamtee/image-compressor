@@ -12,7 +12,7 @@ type TypographyProps = {
 };
 
 export const Typography: FC<TypographyProps> = ({
-  size ='m',
+  size = 'm',
   color,
   weight,
   as: Text = 'p',

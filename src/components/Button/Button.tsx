@@ -6,7 +6,7 @@ type ButtonProps = React.ButtonHTMLAttributes<HTMLButtonElement> & {
   variant: 'accent' | 'underline';
 };
 
-export const Button: React.FC<ButtonProps> = ({ variant = "accent", children, className, ...props }) => {
+export const Button: React.FC<ButtonProps> = ({ variant = 'accent', children, className, ...props }) => {
   return (
     <button className={cn(styles.button, styles[variant], className)} {...props}>
       {children}
