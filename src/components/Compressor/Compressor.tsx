@@ -6,11 +6,24 @@ import { compressFile } from './Compressor.helpers';
 import { UploadedFile } from '../UploadedFile';
 import { downloadFile } from '../../utils/helpers';
 import { OutputFiles } from './CompressedFile.types';
-import { useTranslation } from 'react-i18next';
+import { Trans, useTranslation } from 'react-i18next';
+import { Typography } from '../Typography';
+import { CountrySelect } from '../../CountrySelect';
+
+const Title = () => (
+  <Typography as="h1">
+    <Trans
+      i18nKey="title"
+      components={{
+        primary: <Typography as="span" color="primary" size="xl" weight="bold" />,
+        dark: <Typography as="span" color="dark" size="xl" weight="bold" />,
+      }}
+    />
+  </Typography>
+);
 
 export const Compressor: React.FC = () => {
   const { t } = useTranslation();
-
   const [dragging, setDragging] = useState(false);
   const [compressedFiles, setCompressedFiles] = useState<OutputFiles[]>([]);
   // const [progress, setProgress] = useState<number>(0);
@@ -38,7 +51,7 @@ export const Compressor: React.FC = () => {
 
     const compressedFilePromises = Array.from(files).map(compressFile);
 
-    const compressedFiles = await Promise.all(compressedFilePromises); 
+    const compressedFiles = await Promise.all(compressedFilePromises);
     const filteredCompressedFiles = compressedFiles.filter((file) => !!file) as OutputFiles[];
     setCompressedFiles((prev) => filteredCompressedFiles.concat(prev));
     setIsLoading(false);
@@ -60,7 +73,10 @@ export const Compressor: React.FC = () => {
 
   return (
     <div className={styles.container}>
-      <h1 className={styles.title}>{t('title')}</h1>
+      <div className={styles.header}>
+        <Title />
+        <CountrySelect />
+      </div>
       <div
         className={cn(styles.dropArea, { [styles.dragging]: dragging })}
         onDragOver={handleDragOver}

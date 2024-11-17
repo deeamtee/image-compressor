@@ -5,21 +5,21 @@ import LngDetector from 'i18next-browser-languagedetector';
 const resources = {
   en: {
     translation: {
-      title: 'Images Compressor',
+      title: '<dark>Images</dark> <primary>Compressor</primary>',
       dragndrop: 'Drag and drop an image here',
-      download: 'Download'
+      download: 'Download',
     },
   },
   ru: {
     translation: {
-      title: 'Сжатие картинок',
+      title: '<dark>Сжатие</dark> <primary>Картинок</primary>',
       dragndrop: 'Перетащите изображение сюда',
-      download: 'Скачать'
+      download: 'Скачать',
     },
   },
 };
 
 i18next.use(initReactI18next).use(LngDetector).init({
   fallbackLng: 'en',
-  resources
+  resources,
 });

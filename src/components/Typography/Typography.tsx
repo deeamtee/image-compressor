@@ -8,19 +8,34 @@ type TypographyProps = {
   weight?: 'regular' | 'semibold' | 'bold';
   as?: keyof JSX.IntrinsicElements;
   className?: string;
-  children: React.ReactNode;
+  children?: React.ReactNode;
 };
 
 export const Typography: FC<TypographyProps> = ({
-  size = 'm',
-  color = 'primary',
-  weight= "regular",
+  size ='m',
+  color,
+  weight,
   as: Text = 'p',
   className = '',
   children,
 }) => {
+  const colorClassMap: Record<string, string | undefined> = {
+    primary: styles['color-primary'],
+    dark: styles['color-dark'],
+  };
+
+  const colorClass = colorClassMap[color ?? ''];
+
   return (
-    <Text className={cn(styles.typography, styles[`size-${size}`], styles[`weight-${weight}`], className)} style={{ color }}>
+    <Text
+      className={cn(
+        styles.typography,
+        size && styles[`size-${size}`],
+        weight && styles[`weight-${weight}`],
+        colorClass,
+        className
+      )}
+    >
       {children}
     </Text>
   );

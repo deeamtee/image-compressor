@@ -1,0 +1,52 @@
+.select {
+  position: relative;
+}
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 4px;
+  border: 0.5px solid #e7e8e8;
+  border-radius: 4px;
+  cursor: pointer;
+  background-color: var(--color-white);
+}
+
+.icon {
+  transition: transform 0.3s ease;
+}
+
+.label {
+  display: flex;
+  margin-right: var(--spacing-4);
+}
+
+.iconOpen {
+  transform: rotate(180deg);
+}
+
+.dropdown {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  width: 100%;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  border: 0.5px solid #e7e8e8;
+  border-radius: 4px;
+  background-color: var(--color-white);
+  z-index: 10;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.option {
+  padding: 4px;
+  cursor: pointer;
+}
+
+.option:hover {
+  background-color: #f0f0f0;
+}
