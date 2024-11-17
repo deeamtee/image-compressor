@@ -1,6 +1,5 @@
 .typography {
   font-family: 'Montserrat', sans-serif;
-  color: var(--color-primary);
 }
 
 .size-s {
@@ -33,4 +32,12 @@
 
 .weight-bold {
   font-weight: 700;
+}
+
+.color-primary	{
+  color: var(--color-primary);
+}
+
+.color-dark	{
+  color: var(--color-dark);
 }
