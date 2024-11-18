@@ -68,9 +68,10 @@
 }
 
 .uploadedFiles {
-  max-height: 1080px;
+  max-height: calc(100vh - 206px);
+  flex: 1;
   overflow: auto;
-  scrollbar-width: none;
+  scrollbar-width: thin;
   scrollbar-color: #8ac5ff #ffffff;
 }
 
