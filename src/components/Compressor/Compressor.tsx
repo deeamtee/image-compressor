@@ -68,6 +68,7 @@ export const Compressor: React.FC = () => {
 
     downloadFile(zipBlob, zipFileName);
   };
+  const fullscreenMode = !compressedFiles.length || dragging;
 
   return (
     <div className={styles.container}>
@@ -77,31 +78,33 @@ export const Compressor: React.FC = () => {
           <CountrySelect />
         </div>
         <div
-          className={cn(styles.dropArea, { [styles.dragging]: dragging })}
+          className={cn(styles.dropArea, {
+            [styles.dropArea_dragging]: dragging,
+            [styles.dropArea_fullscreen]: fullscreenMode,
+          })}
           onDragOver={handleDragOver}
           onDragLeave={handleDragLeave}
           onDrop={handleDrop}
         >
-          <div className={styles.content}>
-            {isLoading ? (
-              <div className={styles.loader} />
-            ) : (
-              <div className={styles.dragndrop}>
-                <Icon variant="picture" />
-                <Typography className={styles.dragndropText} size="m" weight="semibold" color="primary">
-                  {t('dragndrop')} <br /> (SVG, JPEG, PNG)
-                </Typography>
-              </div>
-            )}
-          </div>
+          {isLoading ? (
+            <div className={styles.loader} />
+          ) : (
+            <div className={styles.dragndrop}>
+              <Icon variant="picture" />
+              <Typography className={styles.dragndropText} size="m" weight="semibold" color="primary">
+                {t('dragndrop')} <br /> (SVG, JPEG, PNG, WEBP)
+              </Typography>
+            </div>
+          )}
         </div>
         <div className={styles.uploadedFiles}>
-          {compressedFiles.map(({ originalFile, compressedFile }, index) => (
-            <UploadedFile key={index} originalFile={originalFile} compressedFile={compressedFile} />
-          ))}
+          {!dragging &&
+            compressedFiles.map(({ originalFile, compressedFile }, index) => (
+              <UploadedFile key={index} originalFile={originalFile} compressedFile={compressedFile} />
+            ))}
         </div>
       </div>
-      {compressedFiles.length > 0 && (
+      {!fullscreenMode && (
         <Button className={styles.downloadButton} variant="accent" onClick={handleDownloadAll}>
           {t('download')} ZIP
         </Button>

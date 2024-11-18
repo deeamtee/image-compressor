@@ -9,6 +9,7 @@
 }
 
 .narrow {
+  height: 100%;
   padding: 0 var(--spacing-16);
 }
 
@@ -25,20 +26,11 @@
   padding: 16px;
   margin: var(--spacing-12) auto;
   border-radius: 8px;
-}
 
-.dropArea.dragging {
-  border-color: var(--color-primary);
-  background-color: var(--color-primary-20);
-}
-
-.content {
   display: flex;
   justify-content: center;
-  font-size: 15px;
-  line-height: 1.5;
+  align-items: center;
 }
-
 .progress {
   width: 100%;
   margin: 0 auto 20px;
@@ -136,4 +128,12 @@
 }
 .dragndropText {
   text-align: center;
+}
+
+.dropArea_fullscreen {
+  height: calc(100% - 60px);
+}
+.dropArea_dragging {
+  border-color: var(--color-primary);
+  background-color: var(--color-primary-20);
 }
