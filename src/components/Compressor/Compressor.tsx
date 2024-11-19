@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import JSZip from 'jszip';
 import cn from 'clsx';
 import { compressFile } from './Compressor.helpers';
@@ -25,9 +25,30 @@ const Title = () => (
 export const Compressor: React.FC = () => {
   const { t } = useTranslation();
   const [dragging, setDragging] = useState(false);
+  const [dragContent, setDragContent] = useState(false);
   const [compressedFiles, setCompressedFiles] = useState<OutputFiles[]>([]);
   // const [progress, setProgress] = useState<number>(0);
   const [isLoading, setIsLoading] = useState<boolean>(false);
+
+  useEffect(() => {
+    if (!chrome.runtime) return;
+
+    const handleRuntimeMessage = (message: { type: string; data: string }) => {
+      if (message.type === 'dragenter') {
+        setDragContent(true);
+      }
+
+      if (message.type === 'dragend') {
+        setDragContent(false);
+      }
+    };
+
+    chrome.runtime.onMessage.addListener(handleRuntimeMessage);
+
+    return () => {
+      chrome.runtime.onMessage.removeListener(handleRuntimeMessage);
+    };
+  }, []);
 
   const handleDragOver = (e: React.DragEvent) => {
     e.preventDefault();
@@ -68,7 +89,7 @@ export const Compressor: React.FC = () => {
 
     downloadFile(zipBlob, zipFileName);
   };
-  const fullscreenMode = !compressedFiles.length || dragging;
+  const fullscreenMode = !compressedFiles.length || dragging || dragContent;
 
   return (
     <div className={styles.container}>
