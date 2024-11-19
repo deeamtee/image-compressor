@@ -8,24 +8,19 @@
   height: 100vh;
 }
 
-.narrow {
-  height: 100%;
-  padding: 0 0 var(--spacing-16) var(--spacing-16);
-}
-
 .header {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding-right: var(--spacing-16);
+  padding: 0 var(--spacing-16);
 }
 
 .dropArea {
   box-sizing: border-box;
-  width: 100%;
+  width: calc(100% - var(--spacing-32));
   border: 1.5px dashed var(--color-gray);
   padding: 16px;
-  margin: var(--spacing-12) auto var(--spacing-20) auto;
+  margin: var(--spacing-12) auto var(--spacing-20);
   border-radius: 8px;
 
   display: flex;
@@ -67,7 +62,8 @@
 
 .uploadedFiles {
   margin: 0;
-  padding-left: 0;
+  /** TODO: изменить отступ в соответствии с макетом */
+  padding-left: var(--spacing-16);
   padding-right: var(--spacing-8);
 }
 
@@ -122,6 +118,7 @@
   align-items: center;
   gap: var(--spacing-8);
 }
+
 .dragndropText {
   text-align: center;
 }
@@ -129,6 +126,7 @@
 .dropArea_fullscreen {
   height: calc(100% - 60px);
 }
+
 .dropArea_dragging {
   border-color: var(--color-primary);
   background-color: var(--color-primary-20);
@@ -136,5 +134,9 @@
 
 .simplebar-custom-style {
   padding-right: var(--spacing-16);
-  max-height: calc(100vh - 230px);
+  max-height: calc(100vh - 214px);
+}
+
+.wrapper {
+  flex: 1;
 }
