@@ -40,3 +40,18 @@ h5 {
 h6 {
   font-size: 0.75rem;
 }
+
+/* Необходимые стили simplebar-react */
+.simplebar-scrollbar {
+  background-color: var(--color-primary);
+  width: 3px;
+  border-radius: 10px;
+}
+
+.simplebar-track.simplebar-vertical {
+  background-color: var(--color-gray-50);
+  width: 3px;
+  bottom: 32px;
+  border-radius: 10px;
+  height: 100%;
+}

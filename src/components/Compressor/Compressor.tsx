@@ -9,6 +9,8 @@ import { Trans, useTranslation } from 'react-i18next';
 import { Typography, Icon, Button } from 'ui';
 import { CountrySelect } from '../CountrySelect/CountrySelect';
 import styles from './Compressor.module.css';
+import SimpleBar from 'simplebar-react';
+import 'simplebar-react/dist/simplebar.min.css';
 
 const Title = () => (
   <Typography as="h1">
@@ -118,31 +120,36 @@ export const Compressor: React.FC = () => {
           <Title />
           <CountrySelect />
         </div>
-        <div
-          className={cn(styles.dropArea, {
-            [styles.dropArea_dragging]: isDraggingOver,
-            [styles.dropArea_fullscreen]: fullscreenMode,
-          })}
-          onDragOver={handleDragOver}
-          onDragLeave={handleDragLeave}
-          onDrop={handleDrop}
-        >
-          {isLoading ? (
-            <div className={styles.loader} />
-          ) : (
-            <div className={styles.dragndrop}>
-              <Icon variant="picture" />
-              <Typography className={styles.dragndropText} size="m" weight="semibold" color="primary">
-                {t('dragndrop')} <br /> (SVG, JPEG, PNG, WEBP)
-              </Typography>
-            </div>
-          )}
+        <div className={styles.dropAreaWrapper}>
+          <div
+            className={cn(styles.dropArea, {
+              [styles.dropArea_dragging]: isDraggingOver,
+              [styles.dropArea_fullscreen]: fullscreenMode,
+            })}
+            onDragOver={handleDragOver}
+            onDragLeave={handleDragLeave}
+            onDrop={handleDrop}
+          >
+            {isLoading ? (
+              <div className={styles.loader} />
+            ) : (
+              <div className={styles.dragndrop}>
+                <Icon variant="picture" />
+                <Typography className={styles.dragndropText} size="m" weight="semibold" color="primary">
+                  {t('dragndrop')} <br /> (SVG, JPEG, PNG, WEBP)
+                </Typography>
+              </div>
+            )}
+          </div>
         </div>
+
         <div className={styles.uploadedFiles}>
-          {!fullscreenMode &&
-            compressedFiles.map(({ originalFile, compressedFile }, index) => (
-              <UploadedFile key={index} originalFile={originalFile} compressedFile={compressedFile} />
-            ))}
+          <SimpleBar autoHide={false} forceVisible="y" className={styles[`simplebar-custom-style`]}>
+            {!fullscreenMode &&
+              compressedFiles.map(({ originalFile, compressedFile }, index) => (
+                <UploadedFile key={index} originalFile={originalFile} compressedFile={compressedFile} />
+              ))}
+          </SimpleBar>
         </div>
       </div>
       {!fullscreenMode && (

@@ -68,6 +68,10 @@
   padding-top: var(--spacing-12);
 }
 
+.container:first-child {
+  padding-top: 0;
+}
+
 .error {
   color: #ff0000;
 }
