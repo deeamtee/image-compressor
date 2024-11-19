@@ -52,7 +52,7 @@ export const Compressor: React.FC = () => {
 
     if (!chrome.runtime) return removeEventListeners;
 
-    const handleRuntimeMessage = (message: { type: string; data: string }) => {
+    const handleRuntimeMessage = (message: { type: string }) => {
       if (message.type === 'dragenter') {
         setIsAreaExpanded(true);
       }
@@ -115,32 +115,31 @@ export const Compressor: React.FC = () => {
 
   return (
     <div className={styles.container}>
-      <div className={styles.narrow}>
+      <div className={styles.wrapper}>
         <div className={styles.header}>
           <Title />
           <CountrySelect />
         </div>
-        <div className={styles.dropAreaWrapper}>
-          <div
-            className={cn(styles.dropArea, {
-              [styles.dropArea_dragging]: isDraggingOver,
-              [styles.dropArea_fullscreen]: fullscreenMode,
-            })}
-            onDragOver={handleDragOver}
-            onDragLeave={handleDragLeave}
-            onDrop={handleDrop}
-          >
-            {isLoading ? (
-              <div className={styles.loader} />
-            ) : (
-              <div className={styles.dragndrop}>
-                <Icon variant="picture" />
-                <Typography className={styles.dragndropText} size="m" weight="semibold" color="primary">
-                  {t('dragndrop')} <br /> (SVG, JPEG, PNG, WEBP)
-                </Typography>
-              </div>
-            )}
-          </div>
+
+        <div
+          className={cn(styles.dropArea, {
+            [styles.dropArea_dragging]: isDraggingOver,
+            [styles.dropArea_fullscreen]: fullscreenMode,
+          })}
+          onDragOver={handleDragOver}
+          onDragLeave={handleDragLeave}
+          onDrop={handleDrop}
+        >
+          {isLoading ? (
+            <div className={styles.loader} />
+          ) : (
+            <div className={styles.dragndrop}>
+              <Icon variant="picture" />
+              <Typography className={styles.dragndropText} size="m" weight="semibold" color="primary">
+                {t('dragndrop')} <br /> (SVG, JPEG, PNG, WEBP)
+              </Typography>
+            </div>
+          )}
         </div>
 
         <div className={styles.uploadedFiles}>
