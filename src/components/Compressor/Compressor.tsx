@@ -119,7 +119,7 @@ export const Compressor: React.FC = () => {
           )}
         </div>
         <div className={styles.uploadedFiles}>
-          {!dragging &&
+          {!dragContent &&
             compressedFiles.map(({ originalFile, compressedFile }, index) => (
               <UploadedFile key={index} originalFile={originalFile} compressedFile={compressedFile} />
             ))}
