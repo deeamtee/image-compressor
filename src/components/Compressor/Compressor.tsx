@@ -24,22 +24,40 @@ const Title = () => (
 
 export const Compressor: React.FC = () => {
   const { t } = useTranslation();
-  const [dragging, setDragging] = useState(false);
-  const [dragContent, setDragContent] = useState(false);
+  const [isAreaExpanded, setIsAreaExpanded] = useState(false);
+  const [isDraggingOver, setIsDraggingOver] = useState(false);
   const [compressedFiles, setCompressedFiles] = useState<OutputFiles[]>([]);
   // const [progress, setProgress] = useState<number>(0);
   const [isLoading, setIsLoading] = useState<boolean>(false);
 
   useEffect(() => {
-    if (!chrome.runtime) return;
+    const handleDragEnd = () => {
+      setIsDraggingOver(false);
+      setIsAreaExpanded(false);
+    };
+
+    const handleDragEnter = () => {
+      setIsAreaExpanded(true);
+    };
+
+    document.addEventListener('dragend', handleDragEnd);
+    document.addEventListener('dragenter', handleDragEnter);
+
+    const removeEventListeners = () => {
+      document.removeEventListener('dragend', handleDragEnd);
+      document.removeEventListener('dragenter', handleDragEnter);
+    };
+
+    if (!chrome.runtime) return removeEventListeners;
 
     const handleRuntimeMessage = (message: { type: string; data: string }) => {
       if (message.type === 'dragenter') {
-        setDragContent(true);
+        setIsAreaExpanded(true);
       }
 
       if (message.type === 'dragend') {
-        setDragContent(false);
+        setIsAreaExpanded(false);
+        setIsDraggingOver(false);
       }
     };
 
@@ -47,21 +65,23 @@ export const Compressor: React.FC = () => {
 
     return () => {
       chrome.runtime.onMessage.removeListener(handleRuntimeMessage);
+      removeEventListeners();
     };
   }, []);
 
   const handleDragOver = (e: React.DragEvent) => {
     e.preventDefault();
-    setDragging(true);
+    setIsDraggingOver(true);
   };
 
   const handleDragLeave = () => {
-    setDragging(false);
+    setIsDraggingOver(false);
   };
 
   const handleDrop = async (e: React.DragEvent) => {
     e.preventDefault();
-    setDragging(false);
+    setIsDraggingOver(false);
+    setIsAreaExpanded(false);
     setIsLoading(true);
     // setProgress(0);
     const files = e.dataTransfer.files;
@@ -89,7 +109,7 @@ export const Compressor: React.FC = () => {
 
     downloadFile(zipBlob, zipFileName);
   };
-  const fullscreenMode = !compressedFiles.length || dragging || dragContent;
+  const fullscreenMode = !compressedFiles.length || isDraggingOver || isAreaExpanded;
 
   return (
     <div className={styles.container}>
@@ -100,7 +120,7 @@ export const Compressor: React.FC = () => {
         </div>
         <div
           className={cn(styles.dropArea, {
-            [styles.dropArea_dragging]: dragging,
+            [styles.dropArea_dragging]: isDraggingOver,
             [styles.dropArea_fullscreen]: fullscreenMode,
           })}
           onDragOver={handleDragOver}
@@ -119,7 +139,7 @@ export const Compressor: React.FC = () => {
           )}
         </div>
         <div className={styles.uploadedFiles}>
-          {!dragContent &&
+          {!fullscreenMode &&
             compressedFiles.map(({ originalFile, compressedFile }, index) => (
               <UploadedFile key={index} originalFile={originalFile} compressedFile={compressedFile} />
             ))}
