@@ -134,7 +134,7 @@
 
 .simplebar-custom-style {
   padding-right: var(--spacing-16);
-  max-height: calc(100vh - 214px);
+  max-height: calc(100vh - 230px);
 }
 
 .wrapper {
