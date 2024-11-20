@@ -4,8 +4,8 @@ document.addEventListener('dragenter', (event) => {
   });
 });
 
-document.addEventListener('dragstart', (event) => {
+document.addEventListener('dragend', (event) => {
   chrome.runtime.sendMessage({
-    type: 'dragstart',
+    type: 'dragend',
   });
 });

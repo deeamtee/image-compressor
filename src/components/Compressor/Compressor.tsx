@@ -31,23 +31,29 @@ export const Compressor: React.FC = () => {
   const [compressedFiles, setCompressedFiles] = useState<OutputFiles[]>([]);
   // const [progress, setProgress] = useState<number>(0);
   const [isLoading, setIsLoading] = useState<boolean>(false);
+  const dropAreaRef = React.useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    const handleDragEnd = () => {
-      setIsDraggingOver(false);
-      setIsAreaExpanded(false);
+    /** TODO: Убрать дребезг при перетаскивании */
+    const handleDragLeave = (event: DragEvent) => {
+      const root = document.getElementById('internal-root-extension-container');
+      if (root === event.target) {
+        setIsDraggingOver(false);
+        setIsAreaExpanded(false);
+      }
     };
 
-    const handleDragEnter = () => {
+    const handleDragEnter = (e: { preventDefault: () => void }) => {
+      e.preventDefault();
       setIsAreaExpanded(true);
     };
 
-    document.addEventListener('dragend', handleDragEnd);
     document.addEventListener('dragenter', handleDragEnter);
+    document.addEventListener('dragleave', handleDragLeave);
 
     const removeEventListeners = () => {
-      document.removeEventListener('dragend', handleDragEnd);
       document.removeEventListener('dragenter', handleDragEnter);
+      document.removeEventListener('dragleave', handleDragLeave);
     };
 
     if (!chrome.runtime) return removeEventListeners;
@@ -76,8 +82,13 @@ export const Compressor: React.FC = () => {
     setIsDraggingOver(true);
   };
 
-  const handleDragLeave = () => {
-    setIsDraggingOver(false);
+  const handleDragLeave = (e: React.DragEvent) => {
+    if (dropAreaRef.current?.contains(e.currentTarget)) {
+      setIsDraggingOver(false);
+      setIsAreaExpanded(false);
+    } else {
+      setIsDraggingOver(false);
+    }
   };
 
   const handleDrop = async (e: React.DragEvent) => {
@@ -111,10 +122,11 @@ export const Compressor: React.FC = () => {
 
     downloadFile(zipBlob, zipFileName);
   };
+
   const fullscreenMode = !compressedFiles.length || isDraggingOver || isAreaExpanded;
 
   return (
-    <div className={styles.container}>
+    <div draggable className={styles.container} onDragOver={handleDragOver} onDragLeave={handleDragLeave}>
       <div className={styles.wrapper}>
         <div className={styles.header}>
           <Title />
@@ -122,12 +134,11 @@ export const Compressor: React.FC = () => {
         </div>
 
         <div
+          ref={dropAreaRef}
           className={cn(styles.dropArea, {
             [styles.dropArea_dragging]: isDraggingOver,
             [styles.dropArea_fullscreen]: fullscreenMode,
           })}
-          onDragOver={handleDragOver}
-          onDragLeave={handleDragLeave}
           onDrop={handleDrop}
         >
           {isLoading ? (
