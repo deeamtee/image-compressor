@@ -6,6 +6,11 @@
   background: var(--color-white);
   box-sizing: border-box;
   height: 100vh;
+  margin: 0 auto;
+  max-width: 920px;
+
+  /* Стили для круглой кнопки */
+  padding-bottom: var(--spacing-20);
 }
 
 .header {
@@ -57,14 +62,16 @@
 
 .downloadButton {
   width: 100%;
-  border-radius: 0px;
+
+  /* Стили для круглой кнопки */
+  border-radius: 10px;
+  width: calc(100% - var(--spacing-32));
+  margin: 0 auto;
 }
 
 .uploadedFiles {
   margin: 0;
-  /** TODO: изменить отступ в соответствии с макетом */
-  padding-left: var(--spacing-16);
-  padding-right: var(--spacing-8);
+  padding: 0 var(--spacing-8) 0 var(--spacing-16);
 }
 
 .uploadedFiles::-webkit-scrollbar {
@@ -133,8 +140,10 @@
 }
 
 .simplebar-custom-style {
-  padding-right: var(--spacing-16);
-  max-height: calc(100vh - 230px);
+  padding-right: var(--spacing-8);
+
+  /* Стили для круглой кнопки */
+  max-height: calc(100vh - 250px);
 }
 
 .wrapper {
