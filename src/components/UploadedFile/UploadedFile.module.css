@@ -66,6 +66,8 @@
 
 .container {
   padding-top: var(--spacing-12);
+  width: calc(100% - var(--spacing-24));
+  margin: 0 auto;
 }
 
 .container:first-child {
