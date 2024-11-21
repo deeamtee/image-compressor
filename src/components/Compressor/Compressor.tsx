@@ -48,7 +48,8 @@ export const Compressor: React.FC = () => {
       }
     };
 
-    const handleDrop = () => {
+    const handleDrop = (e: DragEvent) => {
+      e.preventDefault();
       isFileDragging.current = false;
       setIsAreaExpanded(false);
     };
@@ -108,13 +109,7 @@ export const Compressor: React.FC = () => {
   const fullscreenMode = !compressedFiles.length || isDraggingOver || isAreaExpanded;
 
   return (
-    <div
-      draggable
-      className={styles.container}
-      onDragOver={handleDragOver}
-      onDragLeave={handleDragLeave}
-      onDrop={handleDrop}
-    >
+    <div draggable className={styles.container} onDragOver={handleDragOver} onDragLeave={handleDragLeave}>
       <div className={styles.wrapper}>
         <div className={styles.header}>
           <Title />
@@ -122,6 +117,7 @@ export const Compressor: React.FC = () => {
         </div>
 
         <div
+          onDrop={handleDrop}
           ref={dropAreaRef}
           className={cn(styles.dropArea, {
             [styles.dropArea_dragging]: isDraggingOver,
