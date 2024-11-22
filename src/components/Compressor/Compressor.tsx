@@ -11,6 +11,7 @@ import { CountrySelect } from '../CountrySelect/CountrySelect';
 import styles from './Compressor.module.css';
 import SimpleBar from 'simplebar-react';
 import 'simplebar-react/dist/simplebar.min.css';
+import { usePage } from 'hooks';
 
 const Title = () => (
   <Typography as="h1">
@@ -26,6 +27,7 @@ const Title = () => (
 
 export const Compressor: React.FC = () => {
   const { t } = useTranslation();
+  const { navigate } = usePage();
   const [isAreaExpanded, setIsAreaExpanded] = useState(false);
   const [isDraggingOver, setIsDraggingOver] = useState(false);
   const [compressedFiles, setCompressedFiles] = useState<OutputFiles[]>([]);
@@ -125,6 +127,7 @@ export const Compressor: React.FC = () => {
     const zipBlob = await zip.generateAsync({ type: 'blob' });
     const zipFileName = 'compressed_images.zip';
     downloadFile(zipBlob, zipFileName);
+    navigate('feedback');
   };
 
   const fullscreenMode = !compressedFiles.length || isDraggingOver || isAreaExpanded;
