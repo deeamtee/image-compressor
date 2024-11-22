@@ -166,7 +166,7 @@ export const Compressor: React.FC = () => {
         </div>
 
         <div className={styles.uploadedFiles}>
-          <SimpleBar autoHide={false} forceVisible="y" className={styles[`simplebar-custom-style`]}>
+          <SimpleBar autoHide className={styles[`simplebar-custom-style`]}>
             {!fullscreenMode &&
               compressedFiles.map(({ originalFile, compressedFile }, index) => (
                 <UploadedFile key={index} originalFile={originalFile} compressedFile={compressedFile} />
