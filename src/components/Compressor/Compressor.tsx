@@ -31,9 +31,12 @@ export const Compressor: React.FC = () => {
   const [compressedFiles, setCompressedFiles] = useState<OutputFiles[]>([]);
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const dropAreaRef = React.useRef<HTMLDivElement>(null);
+  const fileInputRef = React.useRef<HTMLInputElement>(null);
   const isFileDragging = React.useRef(false);
 
   useEffect(() => {
+    const handleGlobalDragOver = (e: DragEvent) => e.preventDefault();
+
     const handleGlobalDragEnter = (e: DragEvent) => {
       if (e.dataTransfer?.types.includes('Files')) {
         isFileDragging.current = true;
@@ -54,11 +57,13 @@ export const Compressor: React.FC = () => {
       setIsAreaExpanded(false);
     };
 
+    document.addEventListener('dragover', handleGlobalDragOver);
     document.addEventListener('dragenter', handleGlobalDragEnter);
     document.addEventListener('dragleave', handleGlobalDragLeave);
     document.addEventListener('drop', handleDrop);
 
     return () => {
+      document.removeEventListener('dragover', handleGlobalDragOver);
       document.removeEventListener('dragenter', handleGlobalDragEnter);
       document.removeEventListener('dragleave', handleGlobalDragLeave);
       document.removeEventListener('drop', handleDrop);
@@ -78,20 +83,36 @@ export const Compressor: React.FC = () => {
     }
   };
 
-  const handleDrop = async (e: React.DragEvent) => {
-    e.preventDefault();
+  const processFile = async (files: FileList) => {
     setIsDraggingOver(false);
     setIsAreaExpanded(false);
-    setIsLoading(true);
-    const files = e.dataTransfer.files;
 
     if (files.length === 0) return;
+
+    setIsLoading(true);
 
     const compressedFilePromises = Array.from(files).map(compressFile);
     const compressedFiles = await Promise.all(compressedFilePromises);
     const filteredCompressedFiles = compressedFiles.filter((file) => !!file) as OutputFiles[];
     setCompressedFiles((prev) => filteredCompressedFiles.concat(prev));
     setIsLoading(false);
+  };
+
+  const handleDrop = async (e: React.DragEvent) => {
+    e.preventDefault();
+    const files = e.dataTransfer.files;
+    await processFile(files);
+  };
+
+  const handleFileInputChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const files = e.target.files!;
+    await processFile(files);
+
+    e.target.value = '';
+  };
+
+  const handleDropAreaClick = () => {
+    fileInputRef.current?.click();
   };
 
   const handleDownloadAll = async () => {
@@ -115,8 +136,16 @@ export const Compressor: React.FC = () => {
           <Title />
           <CountrySelect />
         </div>
-
+        <input
+          type="file"
+          accept="image/*"
+          multiple
+          ref={fileInputRef}
+          onChange={handleFileInputChange}
+          style={{ display: 'none' }}
+        />
         <div
+          onClick={handleDropAreaClick}
           onDrop={handleDrop}
           ref={dropAreaRef}
           className={cn(styles.dropArea, {
