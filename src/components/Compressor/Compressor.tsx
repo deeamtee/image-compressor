@@ -12,6 +12,7 @@ import styles from './Compressor.module.css';
 import SimpleBar from 'simplebar-react';
 import 'simplebar-react/dist/simplebar.min.css';
 import { usePage } from 'hooks';
+import { Feedback } from '../Feedback';
 
 const Title = () => (
   <Typography as="h1">
@@ -27,7 +28,7 @@ const Title = () => (
 
 export const Compressor: React.FC = () => {
   const { t } = useTranslation();
-  const { navigate } = usePage();
+  const { currentPage, navigate } = usePage();
   const [isAreaExpanded, setIsAreaExpanded] = useState(false);
   const [isDraggingOver, setIsDraggingOver] = useState(false);
   const [compressedFiles, setCompressedFiles] = useState<OutputFiles[]>([]);
@@ -135,49 +136,55 @@ export const Compressor: React.FC = () => {
   return (
     <div draggable className={styles.container} onDragOver={handleDragOver} onDragLeave={handleDragLeave}>
       <div className={styles.wrapper}>
-        <div className={styles.header}>
+        <header className={styles.header}>
           <Title />
           <CountrySelect />
-        </div>
-        <input
-          type="file"
-          accept="image/*"
-          multiple
-          ref={fileInputRef}
-          onChange={handleFileInputChange}
-          style={{ display: 'none' }}
-        />
-        <div
-          onClick={handleDropAreaClick}
-          onDrop={handleDrop}
-          ref={dropAreaRef}
-          className={cn(styles.dropArea, {
-            [styles.dropArea_dragging]: isDraggingOver,
-            [styles.dropArea_fullscreen]: fullscreenMode,
-          })}
-        >
-          {isLoading ? (
-            <div className={styles.loader} />
-          ) : (
-            <div className={styles.dragndrop}>
-              <Icon variant="picture" />
-              <Typography className={styles.dragndropText} size="m" weight="semibold" color="primary">
-                {t('dragndrop')} <br /> (SVG, JPEG, PNG, WEBP)
-              </Typography>
+        </header>
+        {currentPage === 'feedback' ? (
+          <Feedback />
+        ) : (
+          <>
+            <input
+              type="file"
+              accept="image/*"
+              multiple
+              ref={fileInputRef}
+              onChange={handleFileInputChange}
+              style={{ display: 'none' }}
+            />
+            <div
+              onClick={handleDropAreaClick}
+              onDrop={handleDrop}
+              ref={dropAreaRef}
+              className={cn(styles.dropArea, {
+                [styles.dropArea_dragging]: isDraggingOver,
+                [styles.dropArea_fullscreen]: fullscreenMode,
+              })}
+            >
+              {isLoading ? (
+                <div className={styles.loader} />
+              ) : (
+                <div className={styles.dragndrop}>
+                  <Icon variant="picture" />
+                  <Typography className={styles.dragndropText} size="m" weight="semibold" color="primary">
+                    {t('dragndrop')} <br /> (SVG, JPEG, PNG, WEBP)
+                  </Typography>
+                </div>
+              )}
             </div>
-          )}
-        </div>
 
-        <div className={styles.uploadedFiles}>
-          <SimpleBar autoHide className={styles[`simplebar-custom-style`]}>
-            {!fullscreenMode &&
-              compressedFiles.map(({ originalFile, compressedFile }, index) => (
-                <UploadedFile key={index} originalFile={originalFile} compressedFile={compressedFile} />
-              ))}
-          </SimpleBar>
-        </div>
+            <div className={styles.uploadedFiles}>
+              <SimpleBar autoHide className={styles[`simplebar-custom-style`]}>
+                {!fullscreenMode &&
+                  compressedFiles.map(({ originalFile, compressedFile }, index) => (
+                    <UploadedFile key={index} originalFile={originalFile} compressedFile={compressedFile} />
+                  ))}
+              </SimpleBar>
+            </div>
+          </>
+        )}
       </div>
-      {!fullscreenMode && (
+      {!fullscreenMode && currentPage === 'compressor' && (
         <Button className={styles.downloadButton} variant="accent" onClick={handleDownloadAll}>
           {t('download')} ZIP
         </Button>

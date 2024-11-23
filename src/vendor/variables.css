@@ -36,10 +36,3 @@
 
   --font-family: 'Montserrat', system-ui, Arial, sans-serif;
 }
-
-/* Темная тема */
-.dark-theme {
-  --color-primary: #0d1415;
-  --color-dark: #00a3f4;
-  --color-white: #ffffff;
-}

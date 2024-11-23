@@ -62,10 +62,6 @@
 }
 
 .downloadButton {
-  width: 100%;
-
-  /* Стили для круглой кнопки */
-  border-radius: 10px;
   width: calc(100% - var(--spacing-32));
   margin: 0 auto;
 }
@@ -148,5 +144,7 @@
 }
 
 .wrapper {
+  display: flex;
+  flex-direction: column;
   flex: 1;
 }
