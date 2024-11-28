@@ -11,26 +11,17 @@ export const CountrySelect = () => {
   };
 
   const options = [
-    { value: 'en', label: <Icon variant="GB" /> },
-    { value: 'us', label: <Icon variant="US" /> },
-    { value: 'ru', label: <Icon variant="RU" /> },
-    { value: 'zh', label: <Icon variant="CN" /> },
-    { value: 'es', label: <Icon variant="ES" /> },
-    { value: 'pt', label: <Icon variant="PT" /> },
-    { value: 'fr', label: <Icon variant="FR" /> },
-    { value: 'ar', label: <Icon variant="SA" /> },
-    { value: 'de', label: <Icon variant="DE" /> },
-    { value: 'ja', label: <Icon variant="JP" /> },
-    { value: 'it', label: <Icon variant="IT" /> },
-    { value: 'ko', label: <Icon variant="KR" /> },
-    { value: 'nl', label: <Icon variant="NL" /> },
-    { value: 'tr', label: <Icon variant="TR" /> },
-    { value: 'hi', label: <Icon variant="IN" /> },
-    { value: 'id', label: <Icon variant="ID" /> },
-    { value: 'pl', label: <Icon variant="PL" /> },
-    { value: 'sv', label: <Icon variant="SE" /> },
-    { value: 'uk', label: <Icon variant="UA" /> },
-    { value: 'vi', label: <Icon variant="VN" /> },
+    { value: 'en', label: <Icon variant="GB" /> }, // English
+    { value: 'ru', label: <Icon variant="RU" /> }, // Russian
+    { value: 'zh', label: <Icon variant="CN" /> }, // Chinese
+    { value: 'es', label: <Icon variant="ES" /> }, // Spanish
+    { value: 'fr', label: <Icon variant="FR" /> }, // French
+    { value: 'de', label: <Icon variant="DE" /> }, // German
+    { value: 'ja', label: <Icon variant="JP" /> }, // Japanese
+    { value: 'ko', label: <Icon variant="KR" /> }, // Korean
+    { value: 'nl', label: <Icon variant="NL" /> }, // Dutch
+    { value: 'pl', label: <Icon variant="PL" /> }, // Polish
+    { value: 'sv', label: <Icon variant="SE" /> }, // Swedish
   ];
 
   return <Select options={options} value={language} onChange={handleChangeLanguage} />;
