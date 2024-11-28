@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { FilesContext } from './FilesContext';
-import { OutputFiles } from './Files.types';
+import { OutputFiles } from 'types';
 
 export const FilesProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [compressedFiles, setCompressedFiles] = useState<OutputFiles[]>([]);

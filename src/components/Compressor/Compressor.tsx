@@ -4,14 +4,13 @@ import cn from 'clsx';
 import { compressFile } from './Compressor.helpers';
 import { UploadedFile } from '../UploadedFile';
 import { downloadFile } from '../../utils/helpers';
-import { OutputFiles } from './CompressedFile.types';
 import { Trans, useTranslation } from 'react-i18next';
 import { Typography, Icon, Button } from 'ui';
 import { CountrySelect } from '../CountrySelect/CountrySelect';
 import styles from './Compressor.module.css';
 import SimpleBar from 'simplebar-react';
 import 'simplebar-react/dist/simplebar.min.css';
-import { usePage } from 'hooks';
+import { useFiles, usePage } from 'hooks';
 import { Feedback } from '../Feedback';
 
 const Title = () => (
@@ -31,7 +30,7 @@ export const Compressor: React.FC = () => {
   const { currentPage, navigate } = usePage();
   const [isAreaExpanded, setIsAreaExpanded] = useState(false);
   const [isDraggingOver, setIsDraggingOver] = useState(false);
-  const [compressedFiles, setCompressedFiles] = useState<OutputFiles[]>([]);
+  const { compressedFiles, setCompressedFiles } = useFiles();
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const dropAreaRef = React.useRef<HTMLDivElement>(null);
   const fileInputRef = React.useRef<HTMLInputElement>(null);

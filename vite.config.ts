@@ -47,6 +47,7 @@ export default defineConfig({
     alias: {
       ui: resolve(__dirname, './src/ui'),
       hooks: resolve(__dirname, './src/hooks'),
+      types: resolve(__dirname, './src/types'),
     },
   },
 });

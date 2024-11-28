@@ -1,5 +1,5 @@
 import React, { createContext, useContext } from 'react';
-import { OutputFiles } from './Files.types';
+import { OutputFiles } from 'types';
 
 interface FilesContextProps {
   compressedFiles: OutputFiles[];

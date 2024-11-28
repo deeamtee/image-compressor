@@ -1,6 +1,6 @@
 import { usePage } from 'hooks';
 import styles from './Feedback.module.css';
-import { Button } from 'ui';
+import { Button, Typography } from 'ui';
 
 export const Feedback = () => {
   const { navigate } = usePage();
@@ -13,26 +13,41 @@ export const Feedback = () => {
       }
     });
   };
+
+  const handleBack = () => navigate('compressor');
+
   return (
     <div className={styles.container}>
-      <main className={styles.main}>
-        <h2>Files are downloading</h2>
-        <p>
-          Your <span className={styles.feedbackLink}>feedback</span> is valuable for us:
-        </p>
-        <div className={styles.emojis}>
-          <button className={styles.emojiButton}>😔</button>
-          <button className={styles.emojiButton}>😐</button>
-          <button className={styles.emojiButton}>🎉</button>
+      <main className={styles.wrapper}>
+        <div className={styles.content}>
+          <Typography as="h2" size="xl" weight="bold">
+            Files are downloading
+          </Typography>
+          <div>
+            <Typography className={styles.feedbackText} as="span" size="l" weight="semibold">
+              Your&nbsp;
+            </Typography>
+            <Typography color="primary" as="span" size="l" weight="semibold">
+              feedback
+            </Typography>
+            <Typography className={styles.feedbackText} as="span" size="l" weight="semibold">
+              &nbsp;is valuable for us:
+            </Typography>
+          </div>
+          <div className={styles.emojis}>
+            <button className={styles.emojiButton}>😔</button>
+            <button className={styles.emojiButton}>😐</button>
+            <button className={styles.emojiButton}>🎉</button>
+          </div>
         </div>
-        <Button className={styles.openFolderButton} onClick={handleOpenDownload} variant="accent">
+        <Button onClick={handleOpenDownload} variant="accent">
           Open download folder
         </Button>
       </main>
-      <footer className={styles.footer}>
-        <button onClick={() => navigate('compressor')} className={styles.goBackLink}>
+      <footer>
+        <Button variant="underline" onClick={handleBack}>
           Go back
-        </button>
+        </Button>
       </footer>
     </div>
   );
