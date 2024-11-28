@@ -5,6 +5,12 @@ import LngDetector from 'i18next-browser-languagedetector';
 const resources = {
   en: {
     translation: {
+      filesDownloading: 'Files are downloading',
+      your: 'Your',
+      feedback: 'feedback',
+      isValuableForUs: 'is valuable for us',
+      openDownloadFolder: 'Open download folder',
+      goBack: 'Go back',
       title: '<dark>Image</dark> <primary>Compressor</primary>',
       dragndrop: 'Drag and drop an image here',
       download: 'Download',
@@ -12,6 +18,12 @@ const resources = {
   },
   ru: {
     translation: {
+      filesDownloading: 'Файлы загружаются',
+      your: 'Ваши',
+      feedback: 'отзывы',
+      isValuableForUs: 'ценны для нас',
+      openDownloadFolder: 'Открыть папку с загрузками',
+      goBack: 'Вернуться назад',
       title: '<dark>Сжатие</dark> <primary>Картинок</primary>',
       dragndrop: 'Перетащите изображение сюда',
       download: 'Скачать',
@@ -19,6 +31,12 @@ const resources = {
   },
   zh: {
     translation: {
+      filesDownloading: '文件正在下载',
+      your: '您的',
+      feedback: '反馈',
+      isValuableForUs: '对我们很有价值',
+      openDownloadFolder: '打开下载文件夹',
+      goBack: '返回',
       title: '<dark>图片</dark> <primary>压缩器</primary>',
       dragndrop: '拖放图片到此处',
       download: '下载',
@@ -26,34 +44,38 @@ const resources = {
   },
   es: {
     translation: {
+      filesDownloading: 'Los archivos se están descargando',
+      your: 'Tu',
+      feedback: 'retroalimentación',
+      isValuableForUs: 'es valioso para nosotros',
+      openDownloadFolder: 'Abrir la carpeta de descargas',
+      goBack: 'Volver atrás',
       title: '<dark>Compresor</dark> <primary>de Imágenes</primary>',
       dragndrop: 'Arrastra y suelta una imagen aquí',
       download: 'Descargar',
     },
   },
-  pt: {
-    translation: {
-      title: '<dark>Compressor</dark> <primary>de Imagens</primary>',
-      dragndrop: 'Arraste e solte uma imagem aqui',
-      download: 'Baixar',
-    },
-  },
   fr: {
     translation: {
+      filesDownloading: 'Les fichiers sont en cours de téléchargement',
+      your: 'Votre',
+      feedback: 'retour',
+      isValuableForUs: 'est précieux pour nous',
+      openDownloadFolder: 'Ouvrir le dossier de téléchargement',
+      goBack: 'Retourner',
       title: "<dark>Compresseur</dark> <primary>d'Images</primary>",
       dragndrop: 'Glissez-déposez une image ici',
       download: 'Télécharger',
     },
   },
-  ar: {
-    translation: {
-      title: '<dark>ضاغط</dark> <primary>الصور</primary>',
-      dragndrop: 'اسحب وأفلت صورة هنا',
-      download: 'تحميل',
-    },
-  },
   de: {
     translation: {
+      filesDownloading: 'Dateien werden heruntergeladen',
+      your: 'Ihr',
+      feedback: 'Feedback',
+      isValuableForUs: 'ist für uns wertvoll',
+      openDownloadFolder: 'Download-Ordner öffnen',
+      goBack: 'Zurück gehen',
       title: '<dark>Bild</dark> <primary>Kompressor</primary>',
       dragndrop: 'Ziehen Sie ein Bild hierher',
       download: 'Herunterladen',
@@ -61,20 +83,25 @@ const resources = {
   },
   ja: {
     translation: {
+      filesDownloading: 'ファイルをダウンロード中',
+      your: 'あなたの',
+      feedback: 'フィードバック',
+      isValuableForUs: 'は私たちにとって重要です',
+      openDownloadFolder: 'ダウンロードフォルダを開く',
+      goBack: '戻る',
       title: '<dark>画像</dark> <primary>圧縮ツール</primary>',
       dragndrop: '画像をここにドラッグアンドドロップ',
       download: 'ダウンロード',
     },
   },
-  it: {
-    translation: {
-      title: '<dark>Compressore</dark> <primary>di Immagini</primary>',
-      dragndrop: "Trascina e rilascia un'immagine qui",
-      download: 'Scarica',
-    },
-  },
   ko: {
     translation: {
+      filesDownloading: '파일이 다운로드 중입니다',
+      your: '귀하의',
+      feedback: '피드백',
+      isValuableForUs: '우리에게 귀중합니다',
+      openDownloadFolder: '다운로드 폴더 열기',
+      goBack: '뒤로 가기',
       title: '<dark>이미지</dark> <primary>압축기</primary>',
       dragndrop: '이미지를 여기에 드래그 앤 드롭하세요',
       download: '다운로드',
@@ -82,34 +109,25 @@ const resources = {
   },
   nl: {
     translation: {
+      filesDownloading: 'Bestanden worden gedownload',
+      your: 'Jouw',
+      feedback: 'feedback',
+      isValuableForUs: 'is waardevol voor ons',
+      openDownloadFolder: 'Open downloadmap',
+      goBack: 'Ga terug',
       title: '<dark>Afbeelding</dark> <primary>Compressor</primary>',
       dragndrop: 'Sleep een afbeelding hierheen',
       download: 'Downloaden',
     },
   },
-  tr: {
-    translation: {
-      title: '<dark>Görüntü</dark> <primary>Kompressörü</primary>',
-      dragndrop: 'Bir resmi buraya sürükleyip bırakın',
-      download: 'İndir',
-    },
-  },
-  hi: {
-    translation: {
-      title: '<dark>छवि</dark> <primary>संपीड़क</primary>',
-      dragndrop: 'यहां एक छवि खींचें और छोड़ें',
-      download: 'डाउनलोड करें',
-    },
-  },
-  id: {
-    translation: {
-      title: '<dark>Kompresor</dark> <primary>Gambar</primary>',
-      dragndrop: 'Seret dan lepas gambar di sini',
-      download: 'Unduh',
-    },
-  },
   pl: {
     translation: {
+      filesDownloading: 'Pliki są pobierane',
+      your: 'Twoje',
+      feedback: 'opinie',
+      isValuableForUs: 'są dla nas cenne',
+      openDownloadFolder: 'Otwórz folder pobierania',
+      goBack: 'Wróć',
       title: '<dark>Kompresor</dark> <primary>Obrazów</primary>',
       dragndrop: 'Przeciągnij i upuść obraz tutaj',
       download: 'Pobierz',
@@ -117,30 +135,15 @@ const resources = {
   },
   sv: {
     translation: {
+      filesDownloading: 'Filer laddas ner',
+      your: 'Din',
+      feedback: 'feedback',
+      isValuableForUs: 'är värdefull för oss',
+      openDownloadFolder: 'Öppna nedladdningsmappen',
+      goBack: 'Gå tillbaka',
       title: '<dark>Bild</dark> <primary>Kompressor</primary>',
       dragndrop: 'Dra och släpp en bild här',
       download: 'Ladda ner',
-    },
-  },
-  uk: {
-    translation: {
-      title: '<dark>Стискач</dark> <primary>Зображень</primary>',
-      dragndrop: 'Перетягніть зображення сюди',
-      download: 'Завантажити',
-    },
-  },
-  vi: {
-    translation: {
-      title: '<dark>Bộ Nén</dark> <primary>Hình Ảnh</primary>',
-      dragndrop: 'Kéo và thả hình ảnh vào đây',
-      download: 'Tải về',
-    },
-  },
-  th: {
-    translation: {
-      title: '<dark>ตัวบีบอัด</dark> <primary>ภาพ</primary>',
-      dragndrop: 'ลากและวางรูปภาพที่นี่',
-      download: 'ดาวน์โหลด',
     },
   },
 };

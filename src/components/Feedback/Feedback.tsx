@@ -1,9 +1,11 @@
 import { usePage } from 'hooks';
 import styles from './Feedback.module.css';
+import { useTranslation } from 'react-i18next';
 import { Button, Typography } from 'ui';
 
 export const Feedback = () => {
   const { navigate } = usePage();
+  const { t } = useTranslation();
 
   const handleOpenDownload = () => {
     chrome.downloads?.search({}, (downloads) => {
@@ -25,17 +27,17 @@ export const Feedback = () => {
       <main className={styles.wrapper}>
         <div className={styles.content}>
           <Typography as="h2" size="xl" weight="bold">
-            Files are downloading
+            {t('filesDownloading')}
           </Typography>
           <div>
             <Typography className={styles.feedbackText} as="span" size="l" weight="semibold">
-              Your&nbsp;
+              {t('your')}&nbsp;
             </Typography>
             <Typography color="primary" as="span" size="l" weight="semibold">
-              feedback
+              {t('feedback')}
             </Typography>
             <Typography className={styles.feedbackText} as="span" size="l" weight="semibold">
-              &nbsp;is valuable for us:
+              &nbsp;{t('isValuableForUs')}:
             </Typography>
           </div>
           <div className={styles.emojis}>
@@ -51,12 +53,12 @@ export const Feedback = () => {
           </div>
         </div>
         <Button onClick={handleOpenDownload} variant="accent">
-          Open download folder
+          {t('openDownloadFolder')}
         </Button>
       </main>
       <footer>
         <Button variant="underline" onClick={handleBack}>
-          Go back
+          {t('goBack')}
         </Button>
       </footer>
     </div>
