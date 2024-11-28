@@ -16,6 +16,10 @@ export const Feedback = () => {
 
   const handleBack = () => navigate('compressor');
 
+  const handleDislike = () => window.open('https://forms.gle/wgkRQjoP7Fbdx4KG6', '_blank', 'noopener,noreferrer');
+
+  const handleLike = () => alert('Thanks! 🎉');
+
   return (
     <div className={styles.container}>
       <main className={styles.wrapper}>
@@ -35,9 +39,15 @@ export const Feedback = () => {
             </Typography>
           </div>
           <div className={styles.emojis}>
-            <button className={styles.emojiButton}>😔</button>
-            <button className={styles.emojiButton}>😐</button>
-            <button className={styles.emojiButton}>🎉</button>
+            <button className={styles.emojiButton} onClick={handleDislike}>
+              😔
+            </button>
+            <button className={styles.emojiButton} onClick={handleDislike}>
+              😐
+            </button>
+            <button className={styles.emojiButton} onClick={handleLike}>
+              🎉
+            </button>
           </div>
         </div>
         <Button onClick={handleOpenDownload} variant="accent">
