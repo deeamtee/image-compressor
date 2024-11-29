@@ -12,6 +12,7 @@ import SimpleBar from 'simplebar-react';
 import 'simplebar-react/dist/simplebar.min.css';
 import { useFiles, usePage } from 'hooks';
 import { Feedback } from '../Feedback';
+import { OutputFiles } from 'types';
 
 const Title = () => (
   <Typography as="h1">
@@ -94,8 +95,8 @@ export const Compressor: React.FC = () => {
     setIsLoading(true);
 
     const compressedFilePromises = Array.from(files).map(compressFile);
-    const compressedFiles = await Promise.all(compressedFilePromises);
-    const filteredCompressedFiles = compressedFiles.filter((file) => !!file) as OutputFiles[];
+    const compressedFiles: OutputFiles[] = await Promise.all(compressedFilePromises);
+    const filteredCompressedFiles = compressedFiles.filter((file) => !!file);
     setCompressedFiles((prev) => filteredCompressedFiles.concat(prev));
     setIsLoading(false);
   };

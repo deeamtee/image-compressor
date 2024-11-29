@@ -3,7 +3,7 @@ import { optimize } from 'svgo';
 import { dataURLtoUint8 } from '../../utils/helpers';
 import Worker from './worker?worker';
 import { ERRORS } from '../../utils/constants';
-import { OutputFiles } from './CompressedFile.types';
+import { OutputFiles } from 'types';
 
 function compressPng(file: File) {
   const reader = new FileReader();
@@ -12,7 +12,7 @@ function compressPng(file: File) {
     reader.onload = async (event) => {
       const inputImageData = dataURLtoUint8(event.target?.result as string);
       const options = {
-        quality: '69-73', // полученно экспериментальным путем
+        quality: '70-85', // полученно экспериментальным путем
         speed: '5',
       };
 
