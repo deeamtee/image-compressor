@@ -148,7 +148,14 @@ const resources = {
   },
 };
 
-i18next.use(initReactI18next).use(LngDetector).init({
-  fallbackLng: 'en',
-  resources,
-});
+i18next
+  .use(LngDetector)
+  .use(initReactI18next)
+  .init({
+    fallbackLng: 'en',
+    resources,
+    detection: {
+      order: ['localStorage', 'navigator'],
+      caches: ['localStorage'],
+    },
+  });

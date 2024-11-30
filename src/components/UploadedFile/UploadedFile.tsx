@@ -3,9 +3,9 @@ import cn from 'clsx';
 import { getExtensionFromMimeType } from './UploadedFile.helpers';
 import { downloadFile } from '../../utils/helpers';
 import fallbackImage from './resources/fallback.jpg';
-import { OutputFiles } from '../Compressor/CompressedFile.types';
 import { Icon, Typography } from 'ui';
 import styles from './UploadedFile.module.css';
+import { OutputFiles } from 'types';
 
 type Props = OutputFiles;
 
