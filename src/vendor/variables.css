@@ -6,15 +6,21 @@
   --color-gray-50: #e7e8e8;
 
   --color-primary: #00a3f4;
-  --color-primary-50: rgba(0, 163, 244, 0.5);
-  --color-primary-35: rgba(0, 163, 244, 0.35);
-  --color-primary-20: rgba(0, 163, 244, 0.2);
+  --color-primary-50: #82d0ff;
+  --color-primary-35: #a6deff;
+  --color-primary-20: #cbeeff;
+  /* 
+  Старые значения цветов:
+  --color-primary-50: #80d1fa;
+  --color-primary-35: #a6dffb;
+  --color-primary-20: #ccedfd;
+*/
 
   --color-dark: #0d1415;
-  --color-dark-50: rgba(13, 20, 21, 0.5);
-  --color-dark-35: rgba(13, 20, 21, 0.35);
-  --color-dark-20: rgba(13, 20, 21, 0.2);
-  --color-dark-10: rgba(13, 20, 21, 0.1);
+  --color-dark-50: #868a8a;
+  --color-dark-35: #abadad;
+  --color-dark-20: #cfd0d0;
+  --color-dark-10: #e7e8e8;
 
   /* Отступы */
   --spacing-4: 4px;
