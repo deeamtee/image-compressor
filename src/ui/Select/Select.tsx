@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useRef, useState } from 'react';
 import styles from './Select.module.css';
 import { useOutsideClick } from 'hooks';
 
@@ -15,7 +15,7 @@ interface SelectProps<T> {
 
 export const Select = <T extends string | number>({ options, value, onChange }: SelectProps<T>) => {
   const [isOpen, setIsOpen] = useState(false);
-  const dropdownRef = React.useRef<HTMLUListElement>(null);
+  const selectRef = useRef<HTMLDivElement>(null);
 
   const handleToggle = () => setIsOpen(!isOpen);
 
@@ -28,10 +28,10 @@ export const Select = <T extends string | number>({ options, value, onChange }: 
 
   const selectedOption = options.find((option) => option.value === value);
 
-  useOutsideClick(dropdownRef, handleClose);
+  useOutsideClick(selectRef, handleClose);
 
   return (
-    <div className={styles.select}>
+    <div className={styles.select} ref={selectRef}>
       <div className={styles.header} onClick={handleToggle}>
         <div className={styles.label}>{selectedOption?.label}</div>
         <svg
@@ -45,7 +45,7 @@ export const Select = <T extends string | number>({ options, value, onChange }: 
         </svg>
       </div>
       {isOpen && (
-        <ul className={styles.dropdown} ref={dropdownRef}>
+        <ul className={styles.dropdown}>
           {options.map((option) => (
             <li key={option.value} className={styles.option} onClick={() => handleSelect(option.value)}>
               {option.label}
