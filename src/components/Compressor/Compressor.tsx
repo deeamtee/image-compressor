@@ -133,6 +133,11 @@ export const Compressor: React.FC = () => {
 
   const fullscreenMode = !compressedFiles.length || isDraggingOver || isAreaExpanded;
 
+  const handleBack = () => {
+    setCompressedFiles([]);
+    navigate('compressor');
+  };
+
   return (
     <div draggable className={styles.container} onDragOver={handleDragOver} onDragLeave={handleDragLeave}>
       <div className={styles.wrapper}>
@@ -141,7 +146,7 @@ export const Compressor: React.FC = () => {
           <CountrySelect />
         </header>
         {currentPage === 'feedback' ? (
-          <Feedback />
+          <Feedback onBack={handleBack} />
         ) : (
           <>
             <input

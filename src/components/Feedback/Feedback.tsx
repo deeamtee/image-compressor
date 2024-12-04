@@ -1,10 +1,8 @@
-import { usePage } from 'hooks';
 import styles from './Feedback.module.css';
 import { useTranslation } from 'react-i18next';
 import { Button, Typography } from 'ui';
 
-export const Feedback = () => {
-  const { navigate } = usePage();
+export const Feedback = ({ onBack }: { onBack: () => void }) => {
   const { t } = useTranslation();
 
   const handleOpenDownload = () => {
@@ -15,8 +13,6 @@ export const Feedback = () => {
       }
     });
   };
-
-  const handleBack = () => navigate('compressor');
 
   const handleDislike = () => window.open('https://forms.gle/wgkRQjoP7Fbdx4KG6', '_blank', 'noopener,noreferrer');
 
@@ -56,7 +52,7 @@ export const Feedback = () => {
           <Button onClick={handleOpenDownload} variant="accent">
             {t('openDownloadFolder')}
           </Button>
-          <Button variant="underline" onClick={handleBack}>
+          <Button variant="underline" onClick={onBack}>
             {t('goBack')}
           </Button>
         </div>
