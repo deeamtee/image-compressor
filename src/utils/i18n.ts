@@ -14,6 +14,8 @@ const resources = {
       title: '<dark>Image</dark> <primary>Compressor</primary>',
       dragndrop: 'Drag and drop an image here',
       download: 'Download',
+      ifYourDownloadHasntStarted: "If your download hasn't started,",
+      clickHere: 'click here',
     },
   },
   ru: {
@@ -27,6 +29,8 @@ const resources = {
       title: '<dark>Сжатие</dark> <primary>Картинок</primary>',
       dragndrop: 'Перетащите изображение сюда',
       download: 'Скачать',
+      ifYourDownloadHasntStarted: 'Если загрузка ещё не началась,',
+      clickHere: 'нажмите сюда',
     },
   },
   zh: {
@@ -40,6 +44,8 @@ const resources = {
       title: '<dark>图片</dark> <primary>压缩器</primary>',
       dragndrop: '拖放图片到此处',
       download: '下载',
+      ifYourDownloadHasntStarted: '如果下载尚未开始，',
+      clickHere: '点击这里',
     },
   },
   es: {
@@ -53,6 +59,8 @@ const resources = {
       title: '<dark>Compresor</dark> <primary>de Imágenes</primary>',
       dragndrop: 'Arrastra y suelta una imagen aquí',
       download: 'Descargar',
+      ifYourDownloadHasntStarted: 'Si tu descarga no ha comenzado,',
+      clickHere: 'haz clic aquí',
     },
   },
   fr: {
@@ -66,6 +74,8 @@ const resources = {
       title: "<dark>Compresseur</dark> <primary>d'Images</primary>",
       dragndrop: 'Glissez-déposez une image ici',
       download: 'Télécharger',
+      ifYourDownloadHasntStarted: 'Si votre téléchargement n’a pas démarré,',
+      clickHere: 'cliquez ici',
     },
   },
   de: {
@@ -79,6 +89,8 @@ const resources = {
       title: '<dark>Bild</dark> <primary>Kompressor</primary>',
       dragndrop: 'Ziehen Sie ein Bild hierher',
       download: 'Herunterladen',
+      ifYourDownloadHasntStarted: 'Wenn Ihr Download nicht gestartet ist,',
+      clickHere: 'klicken Sie hier',
     },
   },
   ja: {
@@ -92,6 +104,8 @@ const resources = {
       title: '<dark>画像</dark> <primary>圧縮ツール</primary>',
       dragndrop: '画像をここにドラッグアンドドロップ',
       download: 'ダウンロード',
+      ifYourDownloadHasntStarted: 'ダウンロードが開始されない場合は、',
+      clickHere: 'ここをクリック',
     },
   },
   ko: {
@@ -105,6 +119,8 @@ const resources = {
       title: '<dark>이미지</dark> <primary>압축기</primary>',
       dragndrop: '이미지를 여기에 드래그 앤 드롭하세요',
       download: '다운로드',
+      ifYourDownloadHasntStarted: '다운로드가 시작되지 않았다면,',
+      clickHere: '여기를 클릭하세요',
     },
   },
   nl: {
@@ -118,6 +134,8 @@ const resources = {
       title: '<dark>Afbeelding</dark> <primary>Compressor</primary>',
       dragndrop: 'Sleep een afbeelding hierheen',
       download: 'Downloaden',
+      ifYourDownloadHasntStarted: 'Als uw download niet is gestart,',
+      clickHere: 'klik hier',
     },
   },
   pl: {
@@ -125,12 +143,14 @@ const resources = {
       filesDownloading: 'Pliki są pobierane',
       your: 'Twoje',
       feedback: 'opinie',
-      isValuableForUs: 'są dla nas cenne',
+      isValuableForUs: 'są dla нас cenne',
       openDownloadFolder: 'Otwórz folder pobierania',
       goBack: 'Wróć',
       title: '<dark>Kompresor</dark> <primary>Obrazów</primary>',
       dragndrop: 'Przeciągnij i upuść obraz tutaj',
       download: 'Pobierz',
+      ifYourDownloadHasntStarted: 'Jeśli pobieranie się nie rozpoczęło,',
+      clickHere: 'kliknij tutaj',
     },
   },
   sv: {
@@ -144,6 +164,8 @@ const resources = {
       title: '<dark>Bild</dark> <primary>Kompressor</primary>',
       dragndrop: 'Dra och släpp en bild här',
       download: 'Ladda ner',
+      ifYourDownloadHasntStarted: 'Om din nedladdning inte har börjat,',
+      clickHere: 'klicka här',
     },
   },
 };

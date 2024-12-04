@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { MouseEvent, useEffect, useState } from 'react';
 import JSZip from 'jszip';
 import cn from 'clsx';
 import { compressFile } from './Compressor.helpers';
@@ -118,7 +118,8 @@ export const Compressor: React.FC = () => {
     fileInputRef.current?.click();
   };
 
-  const handleDownloadAll = async () => {
+  const handleDownloadAll = async (event: MouseEvent) => {
+    event.preventDefault();
     const zip = new JSZip();
     compressedFiles.forEach(({ compressedFile }) => {
       if (!compressedFile) return;
@@ -146,7 +147,7 @@ export const Compressor: React.FC = () => {
           <CountrySelect />
         </header>
         {currentPage === 'feedback' ? (
-          <Feedback onBack={handleBack} />
+          <Feedback onBack={handleBack} onDownload={handleDownloadAll} />
         ) : (
           <>
             <input

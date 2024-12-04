@@ -2,7 +2,12 @@ import styles from './Feedback.module.css';
 import { useTranslation } from 'react-i18next';
 import { Button, Typography } from 'ui';
 
-export const Feedback = ({ onBack }: { onBack: () => void }) => {
+type FeedbackProps = {
+  onBack: () => void;
+  onDownload: () => void;
+};
+
+export const Feedback = ({ onBack, onDownload }: FeedbackProps) => {
   const { t } = useTranslation();
 
   const handleOpenDownload = () => {
@@ -25,27 +30,35 @@ export const Feedback = ({ onBack }: { onBack: () => void }) => {
           <Typography as="h2" size="xl" weight="bold">
             {t('filesDownloading')}
           </Typography>
-          <div>
-            <Typography className={styles.feedbackText} as="span" size="l" weight="semibold">
-              {t('your')}&nbsp;
-            </Typography>
-            <Typography color="primary" as="span" size="l" weight="semibold">
-              {t('feedback')}
-            </Typography>
-            <Typography className={styles.feedbackText} as="span" size="l" weight="semibold">
-              &nbsp;{t('isValuableForUs')}:
-            </Typography>
-          </div>
-          <div className={styles.emojis}>
-            <button className={styles.emojiButton} onClick={handleDislike}>
-              😔
-            </button>
-            <button className={styles.emojiButton} onClick={handleDislike}>
-              😐
-            </button>
-            <button className={styles.emojiButton} onClick={handleLike}>
-              🎉
-            </button>
+          <Typography weight="semibold" className={styles.downloadText}>
+            {t('ifYourDownloadHasntStarted')}&nbsp;
+            <a className={styles.downloadLink} onClick={onDownload}>
+              {t('clickHere')}
+            </a>
+          </Typography>
+          <div className={styles.feedback}>
+            <div>
+              <Typography className={styles.feedbackText} as="span" size="l" weight="semibold">
+                {t('your')}&nbsp;
+              </Typography>
+              <Typography color="primary" as="span" size="l" weight="semibold">
+                {t('feedback')}
+              </Typography>
+              <Typography className={styles.feedbackText} as="span" size="l" weight="semibold">
+                &nbsp;{t('isValuableForUs')}:
+              </Typography>
+            </div>
+            <div className={styles.emojis}>
+              <button className={styles.emojiButton} onClick={handleDislike}>
+                😔
+              </button>
+              <button className={styles.emojiButton} onClick={handleDislike}>
+                😐
+              </button>
+              <button className={styles.emojiButton} onClick={handleLike}>
+                🎉
+              </button>
+            </div>
           </div>
         </div>
         <div className={styles.buttons}>
