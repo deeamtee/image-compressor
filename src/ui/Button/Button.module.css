@@ -21,6 +21,11 @@
   background-color: var(--color-primary-50);
 }
 
+.accent:active {
+  color: var(--color-dark);
+  background: var(--color-primary);
+}
+
 .underline {
   background: none;
   color: var(--color-dark-35);
@@ -34,4 +39,8 @@
 
 .underline:hover {
   color: var(--color-dark);
+}
+
+.underline:active {
+  color: var(--color-primary);
 }

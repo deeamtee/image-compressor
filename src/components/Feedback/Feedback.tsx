@@ -52,15 +52,15 @@ export const Feedback = () => {
             </button>
           </div>
         </div>
-        <Button onClick={handleOpenDownload} variant="accent">
-          {t('openDownloadFolder')}
-        </Button>
+        <div className={styles.buttons}>
+          <Button onClick={handleOpenDownload} variant="accent">
+            {t('openDownloadFolder')}
+          </Button>
+          <Button variant="underline" onClick={handleBack}>
+            {t('goBack')}
+          </Button>
+        </div>
       </main>
-      <footer>
-        <Button variant="underline" onClick={handleBack}>
-          {t('goBack')}
-        </Button>
-      </footer>
     </div>
   );
 };

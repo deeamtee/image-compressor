@@ -14,9 +14,10 @@
   --color-primary-50: #80d1fa;
   --color-primary-35: #a6dffb;
   --color-primary-20: #ccedfd;
-*/
+  */
 
   --color-dark: #0d1415;
+  --color-dark-90: #192526;
   --color-dark-50: #868a8a;
   --color-dark-35: #abadad;
   --color-dark-20: #cfd0d0;
@@ -31,6 +32,7 @@
   --spacing-24: 24px;
   --spacing-28: 28px;
   --spacing-32: 32px;
+  --spacing-36: 36px;
   --spacing-48: 48px;
   --spacing-64: 64px;
 

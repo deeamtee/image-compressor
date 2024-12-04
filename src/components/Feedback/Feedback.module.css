@@ -17,15 +17,21 @@
   padding: var(--spacing-12);
   font-size: 23px;
   cursor: pointer;
-  /* box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); */
-  /* transition: transform 0.2s ease; */
 }
+.emojiButton:hover {
+  background-color: var(--color-primary-20);
+}
+
+.emojiButton:active {
+  outline: 2px solid var(--color-primary);
+}
+
 .content {
   display: flex;
   align-items: center;
   flex-direction: column;
   row-gap: var(--spacing-12);
-  margin-bottom: var(--spacing-48);
+  margin-bottom: var(--spacing-36);
 }
 
 .wrapper {
@@ -38,7 +44,9 @@
 .feedbackText {
   color: var(--color-dark-35);
 }
-
-.emojiButton:hover {
-  background-color: var(--color-primary-20);
+.buttons {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  gap: var(--spacing-12);
 }

@@ -22,7 +22,7 @@ export default tseslint.config(
     rules: {
       ...reactHooks.configs.recommended.rules,
       'react-refresh/only-export-components': ['warn', { allowConstantExport: true }],
-      'prettier/prettier': ['error', {}, { usePrettierrc: true }],
+      'prettier/prettier': ['warn', {}, { usePrettierrc: true }],
       semi: ['warn', 'always'],
       'no-console': ['warn', { allow: ['warn', 'error'] }],
       'linebreak-style': ['error', 'windows'],
