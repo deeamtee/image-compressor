@@ -1,10 +1,11 @@
+import { MouseEvent } from 'react';
 import styles from './Feedback.module.css';
 import { useTranslation } from 'react-i18next';
 import { Button, Typography } from 'ui';
 
 type FeedbackProps = {
-  onBack: () => void;
-  onDownload: () => void;
+  onBack: (event: MouseEvent) => void;
+  onDownload: (event: MouseEvent) => void;
 };
 
 export const Feedback = ({ onBack, onDownload }: FeedbackProps) => {
@@ -21,14 +22,14 @@ export const Feedback = ({ onBack, onDownload }: FeedbackProps) => {
 
   const handleDislike = () => window.open('https://forms.gle/wgkRQjoP7Fbdx4KG6', '_blank', 'noopener,noreferrer');
 
-  const handleLike = () => alert('Thanks! 🎉');
+  const handleLike = () => alert('Thanks! Rate us on the Chrome Web Store 🎉');
 
   return (
     <div className={styles.container}>
       <main className={styles.wrapper}>
         <div className={styles.content}>
           <Typography as="h2" size="xl" weight="bold">
-            {t('filesDownloading')}
+            🎉&nbsp;{t('filesDownloading')}
           </Typography>
           <Typography weight="semibold" className={styles.downloadText}>
             {t('ifYourDownloadHasntStarted')}&nbsp;
@@ -56,7 +57,7 @@ export const Feedback = ({ onBack, onDownload }: FeedbackProps) => {
                 😐
               </button>
               <button className={styles.emojiButton} onClick={handleLike}>
-                🎉
+                🥳
               </button>
             </div>
           </div>

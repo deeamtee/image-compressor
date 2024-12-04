@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import styles from './Select.module.css';
+import { useOutsideClick } from 'hooks';
 
 interface Option<T> {
   value: T;
@@ -14,14 +15,20 @@ interface SelectProps<T> {
 
 export const Select = <T extends string | number>({ options, value, onChange }: SelectProps<T>) => {
   const [isOpen, setIsOpen] = useState(false);
+  const dropdownRef = React.useRef<HTMLUListElement>(null);
 
   const handleToggle = () => setIsOpen(!isOpen);
+
+  const handleClose = () => setIsOpen(false);
+
   const handleSelect = (option: T) => {
     onChange(option);
     setIsOpen(false);
   };
 
   const selectedOption = options.find((option) => option.value === value);
+
+  useOutsideClick(dropdownRef, handleClose);
 
   return (
     <div className={styles.select}>
@@ -38,7 +45,7 @@ export const Select = <T extends string | number>({ options, value, onChange }: 
         </svg>
       </div>
       {isOpen && (
-        <ul className={styles.dropdown}>
+        <ul className={styles.dropdown} ref={dropdownRef}>
           {options.map((option) => (
             <li key={option.value} className={styles.option} onClick={() => handleSelect(option.value)}>
               {option.label}

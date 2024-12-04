@@ -3,6 +3,8 @@
   flex-direction: column;
   align-items: center;
   flex: 1;
+  padding: var(--spacing-16);
+  box-sizing: border-box;
 }
 
 .emojis {
@@ -41,6 +43,7 @@
   align-items: center;
   flex-grow: 1;
   justify-content: center;
+  text-align: center;
 }
 .feedbackText {
   color: var(--color-dark-35);
