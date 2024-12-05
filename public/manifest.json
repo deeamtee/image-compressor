@@ -1,7 +1,7 @@
 {
   "manifest_version": 3,
   "name": "Reduce Image Size",
-  "version": "1.0",
+  "version": "1.0.0",
   "description": "Fast and efficient image compression for PNG, SVG, and JPG files, reducing size while keeping quality. Your data remains private, as all compression is performed locally.",
   "icons": {
     "16": "icons/icon16.png",
