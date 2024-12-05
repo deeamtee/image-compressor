@@ -1,6 +1,6 @@
 {
   "manifest_version": 3,
-  "name": "Reduce Image Size",
+  "name": "Image Compressor",
   "version": "1.0.0",
   "description": "Compress PNG, SVG, JPG, and WebP images locally without losing quality. All processing is done offline, keeping your data private",
   "icons": {
