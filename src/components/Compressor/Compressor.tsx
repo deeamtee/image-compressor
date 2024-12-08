@@ -1,4 +1,4 @@
-import React, { MouseEvent, useEffect, useState } from 'react';
+import React, { MouseEvent, useRef, useState } from 'react';
 import JSZip from 'jszip';
 import cn from 'clsx';
 import { compressFile } from './Compressor.helpers';
@@ -10,7 +10,7 @@ import { CountrySelect } from '../CountrySelect/CountrySelect';
 import styles from './Compressor.module.css';
 import SimpleBar from 'simplebar-react';
 import 'simplebar-react/dist/simplebar.min.css';
-import { useFiles, usePage } from 'hooks';
+import { useFiles, usePage, useDragAndDrop } from 'hooks';
 import { Feedback } from '../Feedback';
 import { OutputFiles } from 'types';
 
@@ -29,88 +29,27 @@ const Title = () => (
 export const Compressor: React.FC = () => {
   const { t } = useTranslation();
   const { currentPage, navigate } = usePage();
-  const [isAreaExpanded, setIsAreaExpanded] = useState(false);
-  const [isDraggingOver, setIsDraggingOver] = useState(false);
   const { compressedFiles, setCompressedFiles } = useFiles();
-  const [isLoading, setIsLoading] = useState<boolean>(false);
-  const dropAreaRef = React.useRef<HTMLDivElement>(null);
-  const fileInputRef = React.useRef<HTMLInputElement>(null);
-  const isFileDragging = React.useRef(false);
-
-  useEffect(() => {
-    const handleGlobalDragOver = (e: DragEvent) => e.preventDefault();
-
-    const handleGlobalDragEnter = (e: DragEvent) => {
-      if (e.dataTransfer?.types.includes('Files')) {
-        isFileDragging.current = true;
-        setIsAreaExpanded(true);
-      }
-    };
-
-    const handleGlobalDragLeave = (e: DragEvent) => {
-      if (e.relatedTarget === null) {
-        isFileDragging.current = false;
-        setIsAreaExpanded(false);
-      }
-    };
-
-    const handleDrop = (e: DragEvent) => {
-      e.preventDefault();
-      isFileDragging.current = false;
-      setIsAreaExpanded(false);
-    };
-
-    document.addEventListener('dragover', handleGlobalDragOver);
-    document.addEventListener('dragenter', handleGlobalDragEnter);
-    document.addEventListener('dragleave', handleGlobalDragLeave);
-    document.addEventListener('drop', handleDrop);
-
-    return () => {
-      document.removeEventListener('dragover', handleGlobalDragOver);
-      document.removeEventListener('dragenter', handleGlobalDragEnter);
-      document.removeEventListener('dragleave', handleGlobalDragLeave);
-      document.removeEventListener('drop', handleDrop);
-    };
-  }, []);
-
-  const handleDragOver = (e: React.DragEvent) => {
-    e.preventDefault();
-    if (dropAreaRef.current?.contains(e.target as Node)) {
-      setIsDraggingOver(true);
-    }
-  };
-
-  const handleDragLeave = (e: React.DragEvent) => {
-    if (dropAreaRef.current && !dropAreaRef.current.contains(e.relatedTarget as Node)) {
-      setIsDraggingOver(false);
-    }
-  };
+  const [isLoading, setIsLoading] = useState(false);
+  const fileInputRef = useRef<HTMLInputElement>(null);
 
   const processFile = async (files: FileList) => {
-    setIsDraggingOver(false);
-    setIsAreaExpanded(false);
-
     if (files.length === 0) return;
 
     setIsLoading(true);
 
     const compressedFilePromises = Array.from(files).map(compressFile);
     const compressedFiles: OutputFiles[] = await Promise.all(compressedFilePromises);
-    const filteredCompressedFiles = compressedFiles.filter((file) => !!file);
-    setCompressedFiles((prev) => filteredCompressedFiles.concat(prev));
+    setCompressedFiles((prev) => compressedFiles.concat(prev));
     setIsLoading(false);
   };
 
-  const handleDrop = async (e: React.DragEvent) => {
-    e.preventDefault();
-    const files = e.dataTransfer.files;
-    await processFile(files);
-  };
+  const { dropAreaRef, isDraggingOver, isAreaExpanded, handleDragOver, handleDragLeave, handleDrop } =
+    useDragAndDrop(processFile);
 
   const handleFileInputChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const files = e.target.files!;
     await processFile(files);
-
     e.target.value = '';
   };
 
