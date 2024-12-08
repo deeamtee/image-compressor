@@ -30,7 +30,7 @@ const FallbackFile = ({ originalFile }: { originalFile: File }) => {
           </div>
         </div>
       </div>
-      <div className={styles.progress} style={{ width: `${100}%` }}></div>
+      <div className={styles.divider} style={{ width: `${100}%` }}></div>
     </div>
   );
 };
@@ -80,12 +80,12 @@ export const UploadedFile: FC<Props> = ({ compressedFile, originalFile }) => {
               </Typography>
             </div>
           </div>
-          <button className={styles.download} onClick={handleDownload}>
-            <Icon variant="download" color="var(--color-primary)" />
-          </button>
+          <div className={styles.download}>
+            <Icon role="button" variant="download" onClick={handleDownload} />
+          </div>
         </div>
       </div>
-      <div className={styles.progress} style={{ width: `${100}%` }}></div>
+      <div className={styles.divider} style={{ width: `${100}%` }}></div>
     </div>
   );
 };

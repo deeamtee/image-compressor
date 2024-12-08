@@ -2,6 +2,7 @@ import { MouseEvent } from 'react';
 import styles from './Feedback.module.css';
 import { useTranslation } from 'react-i18next';
 import { Button, Typography } from 'ui';
+import { closeSidePanel, openDownloadFolder } from './Feedback.helpers';
 
 type FeedbackProps = {
   onBack: (event: MouseEvent) => void;
@@ -11,16 +12,10 @@ type FeedbackProps = {
 export const Feedback = ({ onBack, onDownload }: FeedbackProps) => {
   const { t } = useTranslation();
 
-  const handleOpenDownload = () => {
-    chrome.downloads?.search({}, (downloads) => {
-      if (downloads.length > 0) {
-        const lastDownload = downloads[0];
-        chrome.downloads.show(lastDownload.id);
-      }
-    });
+  const handleDislike = () => {
+    window.open('https://forms.gle/wgkRQjoP7Fbdx4KG6', '_blank', 'noopener,noreferrer');
+    closeSidePanel();
   };
-
-  const handleDislike = () => window.open('https://forms.gle/wgkRQjoP7Fbdx4KG6', '_blank', 'noopener,noreferrer');
 
   const handleLike = () => alert('Thanks! Rate us on the Chrome Web Store 🎉');
 
@@ -63,7 +58,7 @@ export const Feedback = ({ onBack, onDownload }: FeedbackProps) => {
           </div>
         </div>
         <div className={styles.buttons}>
-          <Button onClick={handleOpenDownload} variant="accent">
+          <Button onClick={openDownloadFolder} variant="accent">
             {t('openDownloadFolder')}
           </Button>
           <Button variant="underline" onClick={onBack}>

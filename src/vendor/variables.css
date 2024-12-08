@@ -6,15 +6,10 @@
   --color-gray-50: #e7e8e8;
 
   --color-primary: #00a3f4;
+  --color-primary-80: #31b3f4;
   --color-primary-50: #82d0ff;
   --color-primary-35: #a6deff;
   --color-primary-20: #cbeeff;
-  /* 
-  Старые значения цветов:
-  --color-primary-50: #80d1fa;
-  --color-primary-35: #a6dffb;
-  --color-primary-20: #ccedfd;
-  */
 
   --color-dark: #0d1415;
   --color-dark-90: #192526;
