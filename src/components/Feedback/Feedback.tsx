@@ -17,7 +17,14 @@ export const Feedback = ({ onBack, onDownload }: FeedbackProps) => {
     closeSidePanel();
   };
 
-  const handleLike = () => alert('Thanks! Rate us on the Chrome Web Store 🎉');
+  const handleLike = () => {
+    window.open(
+      'https://chromewebstore.google.com/detail/reduce-image-size/lgmiicnpnjkacaolkkoiiobddokgmcfo/reviews',
+      '_blank',
+      'noopener,noreferrer'
+    );
+    closeSidePanel();
+  };
 
   return (
     <div className={styles.container}>
