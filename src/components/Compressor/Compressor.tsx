@@ -54,6 +54,7 @@ export const Compressor: React.FC = () => {
     const compressedFiles: OutputFiles[] = await Promise.all(compressedFilePromises);
     setCompressedFiles((prev) => compressedFiles.concat(prev));
     setIsLoading(false);
+    setProgress(0);
   };
 
   const { dropAreaRef, isDraggingOver, isAreaExpanded, handleDragOver, handleDragLeave, handleDrop } =
