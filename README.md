@@ -22,3 +22,7 @@
 - Удобный интерфейс с поддержкой **Drag & Drop**.
 - Сжатие без потери качества.
 - Возможность обратной связи.
+
+## License
+
+- Используется под лицензией [GPL v3](https://github.com/kornelski/pngquant/blob/master/COPYRIGHT)
