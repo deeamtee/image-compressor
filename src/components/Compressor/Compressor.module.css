@@ -85,8 +85,8 @@
 }
 
 .loader {
-  width: 56px;
-  height: 56px;
+  width: 60px;
+  height: 60px;
   border-radius: 50%;
   position: absolute;
   animation: rotate 1s linear infinite;
