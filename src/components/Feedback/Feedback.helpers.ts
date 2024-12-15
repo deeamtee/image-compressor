@@ -3,10 +3,5 @@ export const closeSidePanel = () => {
 };
 
 export const openDownloadFolder = () => {
-  chrome.downloads?.search({}, (downloads) => {
-    if (downloads.length > 0) {
-      const lastDownload = downloads[0];
-      chrome.downloads.show(lastDownload.id);
-    }
-  });
+  window.parent.postMessage({ type: 'OPEN_DOWNLOADS_FOLDER' }, '*');
 };
