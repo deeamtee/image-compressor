@@ -27,5 +27,5 @@
       "types": ["src/types"]
     }
   },
-  "include": ["src", "public/background.ts"]
+  "include": ["src", "public/background.js"]
 }
