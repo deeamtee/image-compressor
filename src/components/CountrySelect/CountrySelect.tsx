@@ -19,6 +19,7 @@ const options: Option[] = [
   { value: 'es', label: <Icon variant="ES" /> }, // Spanish
   { value: 'fr', label: <Icon variant="FR" /> }, // French
   { value: 'de', label: <Icon variant="DE" /> }, // German
+  { value: 'tr', label: <Icon variant="TR" /> }, // Turkish
   { value: 'ja', label: <Icon variant="JP" /> }, // Japanese
   { value: 'ko', label: <Icon variant="KR" /> }, // Korean
   { value: 'nl', label: <Icon variant="NL" /> }, // Dutch

@@ -168,6 +168,21 @@ const resources = {
       clickHere: 'klicka här',
     },
   },
+  tr: {
+    translation: {
+      filesDownloading: 'Dosyalar indiriliyor',
+      your: 'Sizin',
+      feedback: 'geri bildirim',
+      isValuableForUs: 'bizim için değerlidir',
+      openDownloadFolder: 'İndirilenler klasörünü aç',
+      goBack: 'Geri dön',
+      title: '<dark>Resim</dark> <primary>Sıkıştırıcı</primary>',
+      dragndrop: 'Bir resmi buraya sürükleyin ve bırakın',
+      download: 'İndir',
+      ifYourDownloadHasntStarted: 'Eğer indirmeniz başlamadıysa,',
+      clickHere: 'buraya tıklayın',
+    },
+  },
 };
 
 i18next
