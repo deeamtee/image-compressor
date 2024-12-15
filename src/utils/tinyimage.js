@@ -1,13 +1,13 @@
 /**
- * Facade for pngquant lib which handles mounting of input file and exposing output file
+ * Facade for tinyimage lib which handles mounting of input file and exposing output file
  * @param  {object}   file     Arraybuffer of image data[png]
- * @param  {object}   options  command line options to be passed to pngquant exec
+ * @param  {object}   options  command line options to be passed to tinyimage exec
  * @param  {function} printF   Custom print function to handle stdout logs
  * @return {object}            Object containing processed png image data in `data` key
  */
 
-export function pngquant(file, options, printF) {
-	/* Wrapper around pngquant exec */
+export function tinyimage(file, options, printF) {
+	/* Wrapper around tinyimage exec */
 
 	// This is to handle the case when we call the function without any argument in order to save it
 	// from google clojure compiler which removes this :p
@@ -5934,7 +5934,7 @@ function _main($0,$1) {
          do {
           if ((label|0) == 93) {
            label = 0;
-           $164 = (_pngquant_file($163,$$0152,$6)|0);
+           $164 = (_tinyimage_file($163,$$0152,$6)|0);
            $165 = HEAP32[$6>>2]|0;
            _liq_attr_destroy($165);
            $166 = ($164|0)==(0);
@@ -6043,7 +6043,7 @@ function _main($0,$1) {
          } while(0);
          if ((label|0) == 111) {
           label = 0;
-          $199 = (_pngquant_file($182,$$1132$ph,$6)|0);
+          $199 = (_tinyimage_file($182,$$1132$ph,$6)|0);
           $$1134 = $199;$$1169 = $$1132$ph;
          }
          _free($$1169);
@@ -6257,7 +6257,7 @@ function _log_callback($0,$1,$2) {
  (_fprintf($3,17509,$vararg_buffer)|0);
  STACKTOP = sp;return;
 }
-function _pngquant_file($0,$1,$2) {
+function _tinyimage_file($0,$1,$2) {
  $0 = $0|0;
  $1 = $1|0;
  $2 = $2|0;
