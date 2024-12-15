@@ -31,6 +31,7 @@ export const Compressor: React.FC = () => {
   const { currentPage, navigate } = usePage();
   const { compressedFiles, setCompressedFiles } = useFiles();
   const [isLoading, setIsLoading] = useState(false);
+  const [progress, setProgress] = useState(0);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   const processFile = async (files: FileList) => {
@@ -38,7 +39,18 @@ export const Compressor: React.FC = () => {
 
     setIsLoading(true);
 
-    const compressedFilePromises = Array.from(files).map(compressFile);
+    const totalFiles = files.length;
+    let processedFiles = 0;
+
+    const updateProgress = () => {
+      processedFiles += 1;
+      setProgress(Math.floor((processedFiles / totalFiles) * 100));
+    };
+
+    const compressedFilePromises = Array.from(files).map((file) => {
+      return compressFile(file, updateProgress);
+    });
+
     const compressedFiles: OutputFiles[] = await Promise.all(compressedFilePromises);
     setCompressedFiles((prev) => compressedFiles.concat(prev));
     setIsLoading(false);
@@ -107,7 +119,10 @@ export const Compressor: React.FC = () => {
               })}
             >
               {isLoading ? (
-                <div className={styles.loader} />
+                <div className={styles.loaderContainer}>
+                  {progress} %
+                  <div className={styles.loader} />
+                </div>
               ) : (
                 <div className={styles.dragndrop}>
                   <Icon variant="picture" />

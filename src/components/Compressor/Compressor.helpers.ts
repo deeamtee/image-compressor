@@ -92,7 +92,7 @@ const compressWebp = async (file: File) => {
   return imageCompression(file, options);
 };
 
-export const compressFile = async (file: File): Promise<OutputFiles> => {
+export const compressFile = async (file: File, onProgress?: () => void): Promise<OutputFiles> => {
   try {
     let compressedFile: File | null = null;
     if (file.type === 'image/svg+xml') {
@@ -104,6 +104,7 @@ export const compressFile = async (file: File): Promise<OutputFiles> => {
     } else if (file.type === 'image/webp') {
       compressedFile = await compressWebp(file);
     }
+    onProgress?.();
     return { originalFile: file, compressedFile };
   } catch {
     return { originalFile: file, compressedFile: null };
