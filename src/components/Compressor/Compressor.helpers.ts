@@ -91,7 +91,7 @@ export const compressFile = async (file: File, onProgress?: () => void): Promise
       compressedFile = await compressImage(file, { initialQuality: 0.75 });
     } else if (file.type === 'image/png') {
       compressedFile = await compressPng(file);
-    } else if (file.type === 'image/webp') {
+    } else if (file.type === 'image/webp' || file.type === 'image/gif') {
       compressedFile = await compressImage(file);
     }
     onProgress?.();
