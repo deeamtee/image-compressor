@@ -1,9 +1,17 @@
-import imageCompression from 'browser-image-compression';
+import imageCompression, { Options } from 'browser-image-compression';
 import { optimize } from 'svgo';
 import { dataURLtoUint8 } from '../../utils/helpers';
 import Worker from './worker?worker';
-import { ERRORS } from '../../utils/constants';
-import { OutputFiles } from 'types';
+import { CompressorError, OutputFiles, WorkerMessage } from 'types';
+
+const compressImage = async (file: File, options?: Options) => {
+  const defaultOptions = {
+    useWebWorker: true,
+    alwaysKeepResolution: true,
+  };
+
+  return imageCompression(file, { ...defaultOptions, ...options });
+};
 
 function compressPng(file: File) {
   const reader = new FileReader();
@@ -19,12 +27,22 @@ function compressPng(file: File) {
       const worker = new Worker();
       worker.postMessage({ pngData: inputImageData, options });
 
-      worker.onmessage = (event) => {
-        const { data, error, type, message } = event.data;
+      worker.onmessage = async (event) => {
+        const { data, error, isRecoverable }: WorkerMessage = event.data;
+
         if (data) {
           resolve(new File([data], file.name, { type: 'image/png' }));
-        } else if (error) {
-          reject({ error, type, message });
+        } else if (error && isRecoverable) {
+          try {
+            const fallbackFile = await compressImage(file, {
+              maxSizeMB: (file.size * 0.45) / (1024 * 1024),
+            });
+            resolve(fallbackFile);
+          } catch (fallbackError) {
+            reject(fallbackError);
+          }
+        } else {
+          reject(error);
         }
         worker.terminate();
       };
@@ -32,25 +50,12 @@ function compressPng(file: File) {
 
     reader.onerror = () =>
       reject({
-        error: 'Error reading PNG file',
-        type: ERRORS.FileReaderError.type,
-        message: ERRORS.FileReaderError.message,
-      });
+        error: { message: 'Error reading PNG file' },
+      } as CompressorError);
 
     reader.readAsDataURL(file);
   });
 }
-
-const compressJpeg = async (file: File) => {
-  const options = {
-    useWebWorker: true,
-    initialQuality: 0.75,
-    alwaysKeepResolution: true,
-    fileType: file.type,
-  };
-
-  return imageCompression(file, options);
-};
 
 const compressSvg = async (file: File) => {
   const reader = new FileReader();
@@ -64,32 +69,17 @@ const compressSvg = async (file: File) => {
       } catch (error) {
         reject({
           error,
-          type: ERRORS.SvgoError.type,
-          message: ERRORS.SvgoError.message,
-        });
+        } as CompressorError);
       }
     };
 
     reader.onerror = () =>
       reject({
-        error: 'Error reading SVG file',
-        type: ERRORS.FileReaderError.type,
-        message: ERRORS.FileReaderError.message,
+        error: { message: 'Error reading SVG file' },
       });
 
     reader.readAsText(file);
   });
-};
-
-const compressWebp = async (file: File) => {
-  const options = {
-    maxSizeMB: 1,
-    useWebWorker: true,
-    fileType: file.type,
-    alwaysKeepResolution: true,
-  };
-
-  return imageCompression(file, options);
 };
 
 export const compressFile = async (file: File, onProgress?: () => void): Promise<OutputFiles> => {
@@ -98,11 +88,11 @@ export const compressFile = async (file: File, onProgress?: () => void): Promise
     if (file.type === 'image/svg+xml') {
       compressedFile = await compressSvg(file);
     } else if (file.type === 'image/jpeg') {
-      compressedFile = await compressJpeg(file);
+      compressedFile = await compressImage(file, { initialQuality: 0.75 });
     } else if (file.type === 'image/png') {
       compressedFile = await compressPng(file);
     } else if (file.type === 'image/webp') {
-      compressedFile = await compressWebp(file);
+      compressedFile = await compressImage(file);
     }
     onProgress?.();
     return { originalFile: file, compressedFile };
