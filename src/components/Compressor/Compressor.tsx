@@ -47,45 +47,9 @@ export const Compressor: React.FC = () => {
       setProgress(Math.floor((processedFiles / totalFiles) * 100));
     };
 
-    const compressedFilePromises = Array.from(files).map(async (file) => {
-      const startFileTime = performance.now(); // Замер начала сжатия файла
-
-      const compressed = await compressFile(file, updateProgress);
-      const { compressedFile } = compressed;
-
-      const endFileTime = performance.now(); // Замер окончания сжатия файла
-      const timeTaken = (endFileTime - startFileTime).toFixed(2); // Время сжатия файла
-
-      // Логирование данных о каждом файле
-      const originalSize = file.size / 1024; // Размер в КБ
-      const compressedSize = compressedFile ? compressedFile.size / 1024 : 0; // Размер в КБ
-      const compressionRatio = compressedFile ? ((originalSize - compressedSize) / originalSize) * 100 : 0; // Процент сжатия
-
-      const fileData = {
-        'File Name': file.name,
-        'Original Size (KB)': originalSize.toFixed(2),
-        'Compressed Size (KB)': compressedFile ? compressedSize.toFixed(2) : 'N/A',
-        'Compression (%)': compressedFile ? compressionRatio.toFixed(2) : '0',
-        'Time Taken (ms)': timeTaken,
-        Type: file.type,
-      };
-
-      console.table([fileData]);
-
-      return compressed;
-    });
-
-    const startTime = performance.now(); // Начало замера всей операции
+    const compressedFilePromises = Array.from(files).map((file) => compressFile(file, updateProgress));
 
     const compressedFiles: OutputFiles[] = await Promise.all(compressedFilePromises);
-
-    const endTime = performance.now(); // Конец замера всей операции
-
-    // Логирование общего времени
-    console.log(
-      `%cprocessFile completed in ${(endTime - startTime).toFixed(2)} ms`,
-      'color: green; font-weight: bold; font-size: 14px;'
-    );
 
     setCompressedFiles((prev) => compressedFiles.concat(prev));
     setIsLoading(false);
