@@ -1,4 +1,4 @@
-import { Trans } from 'react-i18next';
+import { Trans, useTranslation } from 'react-i18next';
 import { Typography } from 'ui';
 import { Compressor } from '../Compressor';
 import { CountrySelect } from '../CountrySelect';
@@ -20,6 +20,7 @@ const Title = () => (
 
 export const App = () => {
   const { currentPage } = usePage();
+  useTranslation();
 
   return (
     <div className={styles.container}>
