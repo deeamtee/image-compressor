@@ -1,5 +1,6 @@
 export const closeSidePanel = () => {
-  window.close();
+  self?.close();
+  window.parent.postMessage({ type: 'CLOSE_SIDE_PANEL' }, '*');
 };
 
 export const openDownloadFolder = () => {

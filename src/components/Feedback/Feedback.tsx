@@ -1,16 +1,24 @@
-import { MouseEvent } from 'react';
-import styles from './Feedback.module.css';
 import { useTranslation } from 'react-i18next';
 import { Button, Typography } from 'ui';
 import { closeSidePanel, openDownloadFolder } from './Feedback.helpers';
+import { useFiles, usePage } from 'hooks';
+import { archiveAndDownload } from '../../utils/helpers';
+import styles from './Feedback.module.css';
 
-type FeedbackProps = {
-  onBack: (event: MouseEvent) => void;
-  onDownload: (event: MouseEvent) => void;
-};
-
-export const Feedback = ({ onBack, onDownload }: FeedbackProps) => {
+export const Feedback = () => {
   const { t } = useTranslation();
+  const { compressedFiles, setCompressedFiles } = useFiles();
+  const { navigate } = usePage();
+
+  const handleDownloadAll = async () => {
+    await archiveAndDownload(compressedFiles);
+    navigate('feedback');
+  };
+
+  const handleBack = () => {
+    setCompressedFiles([]);
+    navigate('compressor');
+  };
 
   const handleDislike = () => {
     window.open('https://forms.gle/wgkRQjoP7Fbdx4KG6', '_blank', 'noopener,noreferrer');
@@ -35,7 +43,7 @@ export const Feedback = ({ onBack, onDownload }: FeedbackProps) => {
           </Typography>
           <Typography weight="semibold" className={styles.downloadText}>
             {t('ifYourDownloadHasntStarted')}&nbsp;
-            <a className={styles.downloadLink} onClick={onDownload}>
+            <a className={styles.downloadLink} onClick={handleDownloadAll}>
               {t('clickHere')}
             </a>
           </Typography>
@@ -68,7 +76,7 @@ export const Feedback = ({ onBack, onDownload }: FeedbackProps) => {
           <Button onClick={openDownloadFolder} variant="accent">
             {t('openDownloadFolder')}
           </Button>
-          <Button variant="underline" onClick={onBack}>
+          <Button variant="underline" onClick={handleBack}>
             {t('goBack')}
           </Button>
         </div>
