@@ -1,0 +1,21 @@
+.container {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  padding-top: var(--spacing-20);
+  background: var(--color-white);
+  box-sizing: border-box;
+  height: 100vh;
+  margin: 0 auto;
+  max-width: 920px;
+
+  /* Стили для круглой кнопки */
+  padding-bottom: var(--spacing-20);
+}
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0 var(--spacing-16);
+}
